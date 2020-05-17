@@ -1,4 +1,5 @@
 # ac-colors
+![package release version badge](https://img.shields.io/github/v/release/vinaypillai/ac-colors) ![travis ci status badge](https://img.shields.io/travis/com/vinaypillai/ac-colors) ![Coveralls coverage badge](https://coveralls.io/repos/github/vinaypillai/ac-colors/badge.svg?branch=master) ![dependecy status badge](https://img.shields.io/librariesio/release/npm/ac-colors) ![mit license badge](https://img.shields.io/npm/l/ac-colors)
 ac-colors is a reactive JavaScript color library that can freely convert between RGB, HSL, HEX, XYZ, LAB, and LCHab, as well as handle random color generation and contrast ratio calculation. A live color picker running on ac-colors can be found at [http://colors.acutecomponents.com/](http://colors.acutecomponents.com/).
 
 * [Installation](#Installation)
@@ -118,7 +119,7 @@ console.log(yellowNoCaps.hexString); // #f1d704
 Each Color objects six [reactive color members](#object-properties),  and two reactive formatting members, `precision` and `capitalize`. This means that setting the value of any of the properties will automatically trigger updates of all the other values, so conversion between all the possible types is done simultaneously.
 ```javascript
 const green = new Color({"color":"#00FF00","type":"hex"});
-console.log(green.rgbString); // RGB(0,255,0)
+console.log(green.rgbString); // RGB(0, 255, 0)
 green.rgb = [255,0,0]
 console.log(green.hslString); // HSL(0.000, 100.000, 50.000)
 green.capitalize = false;
@@ -262,7 +263,7 @@ Although it is easier to handle color conversion by creating Color objects and m
 This method takes in a three element array `[r,g,b]` representing a color's rgb values, and returns a three element array `[h,s,l]` representing the color's hsl values
 ```javascript
 // Color.rgbToHex(hex)
-console.log(Color.rgbToHsl([85,46,58])); // [341.538,29.771,25.686]
+console.log(Color.rgbToHsl([85,46,58])); // [341.53846153846155,29.770992366412212,25.68627450980392]
 ```
 #### `Color.hslToRgb`
 This method takes in a three element array `[h,s,l]` representing a color's hsl values, and returns a three element array `[r,g,b]` representing the color's rgb values
@@ -286,7 +287,7 @@ console.log(Color.hexToRgb("#552e3a")); // [85,46,58]
 This method takes in a three element array `[r,g,b]` representing a color's rgb values, and returns a three element array `[x,y,z]` representing the color's xyz values
 ```javascript
 // Color.rgbToXyz(rgb)
-console.log(Color.rgbToXyz([85,46,58])); // [5.487,4.191,4.522]
+console.log(Color.rgbToXyz([85,46,58])); // [5.487210819926342,4.191199198154069,4.522146326583249]
 ```
 #### `Color.xyzToRgb`
 This method takes in a three element array `[x,y,z]` representing the color's xyz values and returns a three element array `[r,g,b]` representing a color's rgb values.
@@ -298,25 +299,25 @@ console.log(Color.xyzToRgb([5.487,4.191,4.522])); // [85,46,58]
 This method takes in a three element array `[x,y,z]` representing the color's xyz values and returns a three element array `[l,a,b]` representing a color's lab values.
 ```javascript
 // Color.xyzToLab(xyz)
-console.log(Color.xyzToLab([5.487,4.191,4.522])); // [24.294,19.570,0.211]
+console.log(Color.xyzToLab([5.487,4.191,4.522])); // [24.293087120125165,19.569939475918424, 0.21036055335774684]
 ```
 #### `Color.labToXyz`
 This method takes in a three element array `[l,a,b]` representing a color's lab values. and returns a three element array `[x,y,z]` representing the color's xyz values.
 ```javascript
 // Color.labToXyz(lab)
-console.log(Color.labToXyz([24.294,19.570,0.211])); // [5.487,4.191,4.522]
+console.log(Color.labToXyz([24.294,19.570,0.211])); // [5.487340335536105,4.191284860245909,4.5221830392095095]
 ```
 #### `Color.labToLCHab`
 This method takes in a three element array `[l,a,b]` representing a color's lab values. and returns a three element array `[l,c,h]` representing the color's LCHab values.
 ```javascript
 // Color.labToLCHab(lab)
-console.log(Color.labToLCHab([24.294,19.570,0.211])); // [24.294,19.571,0.617]
+console.log(Color.labToLCHab([24.294,19.570,0.211])); // [24.294,19.57113744778264,0.617728209288702]
 ```
 #### `Color.lchABToLab`
 This method takes in a three element array `[l,c,h]` representing a color's LCHab values. and returns a three element array `[l,a,b]` representing the color's lab values.
 ```javascript
 // Color.lchABToLab(lchAB)
-console.log(Color.lchABToLab([24.294,19.571,0.617])); // [24.294,19.570,0.211]
+console.log(Color.lchABToLab([24.294,19.571,0.617])); // [24.294, 19.56986524034229,0.21074979203493507]
 ```
 #### `Color.luminance`
 This method takes in a three element array and a string representing its type and returns its [relative luminance](https://www.w3.org/TR/WCAG20/#relativeluminancedef). Default type is `"rgb"`.

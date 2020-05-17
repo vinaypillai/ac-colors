@@ -150,10 +150,15 @@ class Color{
         let l = hsl[2];
         var r, g, b, m, c, x
 
-        if (!isFinite(h)) h = 0
-        if (!isFinite(s)) s = 0
-        if (!isFinite(l)) l = 0
-
+        if (!isFinite(h)){
+            h = 0
+        }
+        if (!isFinite(s)){
+            s = 0
+        }
+        if (!isFinite(l)){
+            l = 0
+        }
         h /= 60
         if (h < 0) h = 6 - (-h % 6)
         h %= 6
@@ -334,7 +339,7 @@ class Color{
             return "#000000";
         }
     }
-    static contrastRatio(color1=(new Color({color:[0,0,0]})),color2=(new Color({color:[255,255,255]}))){
+    static contrastRatio(color1,color2){
         const luminance1 = Color.luminance(color1.rgb) + 0.05;
         const luminance2 = Color.luminance(color2.rgb) + 0.05;
         return luminance2>luminance1 ? luminance2/luminance1 : luminance1/luminance2;

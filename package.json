@@ -7,7 +7,8 @@
     "test": "test"
   },
   "scripts": {
-    "test": "mocha"
+    "test": "mocha",
+    "coverage": "nyc npm run test && nyc report --reporter=text-lcov | coveralls"
   },
   "repository": {
     "type": "git",
@@ -34,6 +35,11 @@
   "homepage": "https://github.com/vinaypillai/ac-colors#readme",
   "devDependencies": {
     "chai": "^4.2.0",
-    "mocha": "^7.1.2"
+    "coveralls": "^3.1.0",
+    "mocha": "^7.1.2",
+    "mocha-lcov-reporter": "^1.3.0"
+  },
+  "dependencies": {
+    "nyc": "^15.0.1"
   }
 }

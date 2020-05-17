@@ -1,0 +1,36 @@
+{
+  "name": "colors-js",
+  "version": "1.0.0",
+  "description": "A JS based color module for conversion between RGB, HEX, HSL, LAB, and LCHAB",
+  "main": "index.js",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "test": "mocha"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/vinaypillai/colors-js.git"
+  },
+  "keywords": [
+    "acute-components",
+    "lch",
+    "lchab",
+    "lab",
+    "rgb",
+    "hex",
+    "hsl",
+    "color-converter"
+  ],
+  "author": "Vinay Pillai",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/vinaypillai/colors-js/issues"
+  },
+  "homepage": "https://github.com/vinaypillai/colors-js#readme",
+  "devDependencies": {
+    "chai": "^4.2.0",
+    "mocha": "^7.1.2"
+  }
+}

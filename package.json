@@ -1,6 +1,6 @@
 {
   "name": "ac-colors",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "A JS based color module for conversion between RGB, HEX, HSL, LAB, and LCHab",
   "main": "index.js",
   "directories": {

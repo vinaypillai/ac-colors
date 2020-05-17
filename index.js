@@ -1,6 +1,6 @@
 class Color{
     // Construct
-    constructor({color,type="rgb",precision=3, capitalize=true}){
+    constructor({color=[0,0,0],type="rgb",precision=3, capitalize=true}={color:[0,0,0],type:"rgb",precision:3,capitalize:true}){
         this.updateColor(color,type);
         this.precision = precision;
         this.capitalize = capitalize;
@@ -295,7 +295,7 @@ class Color{
     // Misc
     static luminance(color,type="rgb"){
         if(type!="rgb"){
-            color = (new Color(color,type)).rgb;
+            color = (new Color({color,type})).rgb;
         }
         for(let i = 0; i < color.length; i++){
             color[i]/=255;
@@ -313,24 +313,30 @@ class Color{
         return l;
     }
     static random(){
-        return new Color([255*Math.random(),255*Math.random(),255*Math.random()]);
+        return new Color({"color":[255*Math.random(),255*Math.random(),255*Math.random()]});
     }
     static randomOfType(type="rgb"){
-        let randColor = new Color([255*Math.random(),255*Math.random(),255*Math.random()]);
+        const randColor = Color.random();
         return randColor[type];
     }
-    static contrastTextColor(color){
-        let contrastWhite = Color.contrastRatio(new Color("FFFFFF"),);
-        let contrastBlack = (Color.luminance(color,type) + 0.05) / 0.05; 
+    static randomOfTypeFormatted(type="rgb",capitalize=true,precision=3){
+        const randColor = Color.random();
+        randColor.capitalize=capitalize;
+        randColor.precision=precision;
+        return randColor[type+"String"];
+    }
+    static contrastTextColor(color,type="rgb"){
+        const contrastWhite = Color.contrastRatio(new Color({color:[255,255,255]}),new Color({color,type}));
+        const contrastBlack = Color.contrastRatio(new Color({color:[0,0,0]}),new Color({color,type}));
         if(contrastWhite > contrastBlack){
             return "#FFFFFF";
         }else{
             return "#000000";
         }
     }
-    static contrastRatio(color1,color2){
-        let luminance1 = Color.luminance(color1.rgb) + 0.05;
-        let luminance2 = Color.luminance(color2.rgb) + 0.05;
+    static contrastRatio(color1=(new Color({color:[0,0,0]})),color2=(new Color({color:[255,255,255]}))){
+        const luminance1 = Color.luminance(color1.rgb) + 0.05;
+        const luminance2 = Color.luminance(color2.rgb) + 0.05;
         return luminance2>luminance1 ? luminance2/luminance1 : luminance1/luminance2;
     }
 }

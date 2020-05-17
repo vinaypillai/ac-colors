@@ -1,7 +1,7 @@
 {
   "name": "ac-colors",
   "version": "1.0.1",
-  "description": "A JS based color module for conversion between RGB, HEX, HSL, LAB, and LCHab",
+  "description": "ac-colors is a reactive JavaScript color library that can freely convert between RGB, HSL, HEX, XYZ, LAB, and LCHab, as well as handle random color generation and contrast ratio calculation.",
   "main": "index.js",
   "directories": {
     "test": "test"
@@ -11,7 +11,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/vinaypillai/colors-js.git"
+    "url": "git+https://github.com/vinaypillai/ac-colors.git"
   },
   "keywords": [
     "acute-components",
@@ -21,14 +21,17 @@
     "rgb",
     "hex",
     "hsl",
-    "color-converter"
+    "color-converter",
+    "contrast-ratio",
+    "javascript",
+    "random-colors"
   ],
   "author": "Vinay Pillai",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/vinaypillai/colors-js/issues"
+    "url": "https://github.com/vinaypillai/ac-colors/issues"
   },
-  "homepage": "https://github.com/vinaypillai/colors-js#readme",
+  "homepage": "https://github.com/vinaypillai/ac-colors#readme",
   "devDependencies": {
     "chai": "^4.2.0",
     "mocha": "^7.1.2"

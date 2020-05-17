@@ -352,8 +352,8 @@ console.log(Color.randomOfTypeFormatted("hsl",true,1)); // HSL(296.9, 90.6, 79.2
 This method takes in a three element array or string representing a color, and the type of the color, and return `#FFFFFF` or `#000000` depending on which one has a higher [contrast ratio](https://www.w3.org/TR/UNDERSTANDING-WCAG20/visual-audio-contrast-contrast.html#contrast-ratiodef) with the color provided.
 ```javascript
 // Color.contrastTextColor(color,type)
-Color.contrastTextColor([10,20,30]); // #FFFFFF
-Color.contrastTextColor("#e8e9ea","hex"); // #000000
+console.log(Color.contrastTextColor([10,20,30])); // #FFFFFF
+console.log(Color.contrastTextColor("#e8e9ea","hex")); // #000000
 ```
 #### `Color.contrastRatio`
 This method takes in two Color instances and returns the [contrast ratio](https://www.w3.org/TR/UNDERSTANDING-WCAG20/visual-audio-contrast-contrast.html#contrast-ratiodef) between the two. 
@@ -361,7 +361,7 @@ This method takes in two Color instances and returns the [contrast ratio](https:
 // Color.contrastRatio(color1,color2)
 const red = new Color({"color":"#ff0000","type":"hex"});
 const blue = new Color({"color":[255,255,255]})
-Color.contrastRatio(red,blue); // 3.9984767707539985
+console.log(Color.contrastRatio(red,blue)); // 3.9984767707539985
 
 ```
 ## Acknowledgements

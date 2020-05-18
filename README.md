@@ -1,6 +1,6 @@
 # ac-colors
 
-![NPM](https://nodei.co/npm/ac-colors.png?downloads=true&downloadRank=true&stars=true)
+[![NPM](https://nodei.co/npm/ac-colors.png?downloads=true&downloadRank=true&stars=true)](https://www.npmjs.com/package/ac-colors)
 
 ![package release version badge](https://img.shields.io/github/v/release/vinaypillai/ac-colors) ![travis ci status badge](https://img.shields.io/travis/com/vinaypillai/ac-colors) ![Coveralls coverage badge](https://coveralls.io/repos/github/vinaypillai/ac-colors/badge.svg?branch=master) ![dependecy status badge](https://img.shields.io/librariesio/release/npm/ac-colors) ![mit license badge](https://img.shields.io/npm/l/ac-colors)
 

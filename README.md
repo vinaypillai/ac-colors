@@ -57,7 +57,7 @@ ac-colors is a reactive JavaScript color library that can freely convert between
 npm install --save ac-colors
 ```
 ### Browser
-Download the minified [ac-colors.min.js](https://raw.githubusercontent.com/vinaypillai/ac-colors/master/dist/ac-colors.min.js) and include it in a `<script>` tag
+Download the minified transpiled [ac-colors.min.js](https://raw.githubusercontent.com/vinaypillai/ac-colors/master/dist/ac-colors.min.js) and include it in a `<script>` tag
 ``` html
 <script src="ac-colors.min.js"></script>
 ```

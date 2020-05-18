@@ -1,0 +1,16 @@
+test
+index.min.js
+dist
+.DS_Store
+.coveralls.yml
+node_modules
+
+# Editor directories and files
+.idea
+.vscode
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+.nyc_output

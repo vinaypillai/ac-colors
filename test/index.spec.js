@@ -1,6 +1,6 @@
 const process = require("process");
 const assert = require("chai").assert;
-const Color = require("../index.js");
+const Color = require("../index.min.js");
 const testColors = require("./256colors.js")
 
 describe("Color",function(){

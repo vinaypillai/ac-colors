@@ -142,10 +142,62 @@ describe("Color",function(){
                     c2 = new Color({"color":c.xyz,"type":"xyz","precision":2,"capitalize":false});
                     assert.strictEqual(c.rgbString,c2.rgbString);
                 })
+            })
+             context(`Input:various constructor parameters ID:${color.colorId}"`,function(){
+                it("should convert create a color object",function(){
+                    c = new Color();
+                    assert.instanceOf(c, Color);
+                })
+                it("should convert create a color object",function(){
+                    c = new Color({"color":rgbArray});
+                    assert.instanceOf(c, Color);
+                })
+                it("should convert create a color object",function(){
+                    c = new Color({"precision":2});
+                    assert.instanceOf(c, Color);
+                })
+                it("should convert create a color object",function(){
+                    c = new Color({"capitalize":false});
+                    assert.instanceOf(c, Color);
+                })
+                it("should convert create a color object",function(){
+                    c = new Color({"color":rgbArray,"precision":2});
+                    assert.instanceOf(c, Color);
+                })
+                it("should convert create a color object",function(){
+                    c = new Color({"color":rgbArray,"capitalize":false});
+                    assert.instanceOf(c, Color);
+                })
+                it("should convert create a color object",function(){
+                    c = new Color({"precision":2,"capitalize":false});
+                    assert.instanceOf(c, Color);
+                })
+                it("should convert create a color object",function(){
+                    c = new Color({"color":rgbArray,"precision":2,"capitalize":false});
+                    assert.instanceOf(c, Color);
+                })
+            })
+            context(`Should throw error for type`,function(){
+                context(`throw error for type"`,function(){
+                    it("should returns #000000",function(){
+                        assert.throws(()=>{new Color({"color":[0,0,0],"type":null})},TypeError,"Parameter 2 must be of type string");
+                    })
+                    it("should returns #000000",function(){
+                        assert.throws(()=>{new Color({"color":[0,0,0],"type":"asd"})},TypeError,"Parameter 2 'asd' is not a valid type");
+                    })
+                })
             })  
         })
     })
-    
+    describe("#updateColor",function(){
+        context(`Input:"${[85,46,58]}`,function(){
+            it("should returns update Colors value`",function(){
+                const green = new Color({"color":[0,255,0]});
+                green.updateColor([0,0,0]);
+                assert.deepEqual(green.hexString,"#000000");
+            })
+        })
+    })
     describe("#rgbToHsl",function(){
         context(`Input:"${[85,46,58]}`,function(){
             it("should returns a three element array `[h,s,l]`",function(){
@@ -154,9 +206,23 @@ describe("Color",function(){
         })
     })
     describe("#hslToRgb",function(){
-        context(`Input:"${[85,46,58]}`,function(){
+        context(`Input:"${[341.538,29.771,25.686]}`,function(){
             it("should returns a three element array `[r,g,b]`",function(){
                 assert.deepEqual(Color.hslToRgb([341.538,29.771,25.686]),[85,46,58]);
+            })
+        })
+        context(`Input:Measure non finite and negative inputs`,function(){
+            it("should returns a three element array `[r,g,b]`",function(){
+                assert.deepEqual(Color.hslToRgb([341.538,1/0,25.686]),Color.hslToRgb([341.538,0,25.686]));
+            })
+            it("should returns a three element array `[r,g,b]`",function(){
+                assert.deepEqual(Color.hslToRgb([1/0,1/0,25.686]),Color.hslToRgb([0,0,25.686]));
+            })
+            it("should returns a three element array `[r,g,b]`",function(){
+                assert.deepEqual(Color.hslToRgb([1/0,1/0,1/0]),Color.hslToRgb([0,0,0]));
+            })
+            it("should returns a three element array `[r,g,b]`",function(){
+                assert.deepEqual(Color.hslToRgb([-90,90,90]),Color.hslToRgb([270,90,90]));
             })
         })
     })
@@ -232,9 +298,17 @@ describe("Color",function(){
                 assert.strictEqual(Color.luminance([0,255,0]),0.7152);
             })
         })
-         context(`Input:"#ff0000","hex"`,function(){
+        context(`Input:"#ff0000","hex"`,function(){
             it("should returns a decimal luminance",function(){
                 assert.strictEqual(Color.luminance("#ff0000","hex"),0.2126);
+            })
+        })
+        context(`throw error for type"`,function(){
+            it("should returns #000000",function(){
+                assert.throws(()=>{Color.luminance([0,0,0],null)},TypeError,"Parameter 2 must be of type string");
+            })
+            it("should returns #000000",function(){
+                assert.throws(()=>{Color.luminance([0,0,0],"asd")},TypeError,"Parameter 2 'asd' is not a valid type");
             })
         })
     })
@@ -260,6 +334,14 @@ describe("Color",function(){
                 assert.strictEqual(testColor.length,7);
             })
         })
+        context(`throw error for type"`,function(){
+            it("should returns #000000",function(){
+                assert.throws(()=>{Color.randomOfType(null)},TypeError,"Parameter 1 must be of type string");
+            })
+            it("should returns #000000",function(){
+                assert.throws(()=>{Color.randomOfType("asd")},TypeError,"Parameter 1 'asd' is not a valid type");
+            })
+        })
     })
     describe("#randomOfTypeFormatted",function(){
         context(`Input:none`,function(){
@@ -283,6 +365,14 @@ describe("Color",function(){
                 assert.strictEqual(testColor.substr(0,3),"hsl");
             })
         })
+        context(`throw error for type"`,function(){
+            it("should returns #000000",function(){
+                assert.throws(()=>{Color.randomOfTypeFormatted(null)},TypeError,"Parameter 1 must be of type string");
+            })
+            it("should returns #000000",function(){
+                assert.throws(()=>{Color.randomOfTypeFormatted("asd")},TypeError,"Parameter 1 'asd' is not a valid type");
+            })
+        })
     })
     describe("#contrastTextColor",function(){
         context(`Input:${[10,20,30]}`,function(){
@@ -295,6 +385,14 @@ describe("Color",function(){
                 assert.strictEqual(Color.contrastTextColor("#e8e9ea","hex"),"#000000");
             })
         })
+        context(`throw error for type"`,function(){
+            it("should returns #000000",function(){
+                assert.throws(()=>{Color.contrastTextColor("#e8e9ea",null)},TypeError,"Parameter 2 must be of type string");
+            })
+            it("should returns #000000",function(){
+                assert.throws(()=>{Color.contrastTextColor("#e8e9ea","asd")},TypeError,"Parameter 2 'asd' is not a valid type");
+            })
+        })
     })
     describe("#contrastRatio",function(){
         context(`Input:red and blue color objects`,function(){
@@ -302,6 +400,16 @@ describe("Color",function(){
                 const red = new Color({"color":"#ff0000","type":"hex"});
                 const blue = new Color({"color":[255,255,255]})
                 assert.approximately(Color.contrastRatio(red,blue),3.9984767707539985,0.001);
+            })
+            it("should returns throw an error for color 1",function(){
+                const red = new Color({"color":"#ff0000","type":"hex"});
+                const blue = new Color({"color":[255,255,255]})
+                assert.throws(()=>{Color.contrastRatio(null,blue)},TypeError,"Parameter 1 must be of type Color");
+            })
+            it("should returns throw an error for color 2",function(){
+                const red = new Color({"color":"#ff0000","type":"hex"});
+                const blue = new Color({"color":[255,255,255]})
+                assert.throws(()=>{Color.contrastRatio(red,null)},TypeError,"Parameter 2 must be of type Color");
             })
         })
     })

@@ -1,5 +1,5 @@
 class Color{
-    // Construct
+    static validTypes=["rgb","hex","hsl","xyz","lab","lchab"];
     constructor({color=[0,0,0],type="rgb",precision=3, capitalize=true}={color:[0,0,0],type:"rgb",precision:3,capitalize:true}){
         this.updateColor(color,type);
         this.precision = precision;
@@ -7,7 +7,13 @@ class Color{
     }
     updateColor(color,type="rgb"){
         let rgb;
+        if(typeof type !== "string"){
+            throw new TypeError(`Parameter 2 must be of type string.`)
+        }
         type=type.toLowerCase();
+        if(!Color.validTypes.includes(type)){
+            throw new TypeError(`Parameter 2 '${type}' is not a valid type.`)
+        }
         switch(type){
             case "hsl":
                 rgb = Color.hslToRgb(color);
@@ -299,6 +305,13 @@ class Color{
     }
     // Misc
     static luminance(color,type="rgb"){
+        if(typeof type !== "string"){
+            throw new TypeError(`Parameter 2 must be of type string.`)
+        }
+        type=type.toLowerCase();
+        if(!Color.validTypes.includes(type)){
+            throw new TypeError(`Parameter 2 '${type}' is not a valid type.`)
+        }
         if(type!="rgb"){
             color = (new Color({color,type})).rgb;
         }
@@ -321,16 +334,37 @@ class Color{
         return new Color({"color":[255*Math.random(),255*Math.random(),255*Math.random()]});
     }
     static randomOfType(type="rgb"){
+        if(typeof type !== "string"){
+            throw new TypeError(`Parameter 1 must be of type string.`)
+        }
+        type=type.toLowerCase();
+        if(!Color.validTypes.includes(type)){
+            throw new TypeError(`Parameter 1 '${type}' is not a valid type.`)
+        }
         const randColor = Color.random();
         return randColor[type];
     }
     static randomOfTypeFormatted(type="rgb",capitalize=true,precision=3){
+        if(typeof type !== "string"){
+            throw new TypeError(`Parameter 1 must be of type string.`)
+        }
+        type=type.toLowerCase();
+        if(!Color.validTypes.includes(type)){
+            throw new TypeError(`Parameter 1 '${type}' is not a valid type.`)
+        }
         const randColor = Color.random();
         randColor.capitalize=capitalize;
         randColor.precision=precision;
         return randColor[type+"String"];
     }
     static contrastTextColor(color,type="rgb"){
+        if(typeof type !== "string"){
+            throw new TypeError(`Parameter 2 must be of type string.`)
+        }
+        type=type.toLowerCase();
+        if(!Color.validTypes.includes(type)){
+            throw new TypeError(`Parameter 2 '${type}' is not a valid type.`)
+        }
         const contrastWhite = Color.contrastRatio(new Color({color:[255,255,255]}),new Color({color,type}));
         const contrastBlack = Color.contrastRatio(new Color({color:[0,0,0]}),new Color({color,type}));
         if(contrastWhite > contrastBlack){
@@ -340,6 +374,12 @@ class Color{
         }
     }
     static contrastRatio(color1,color2){
+        if(!(color1 instanceof Color)){
+            throw new TypeError("Parameter 1 must be of type Color.")
+        }
+        if(!(color2 instanceof Color)){
+            throw new TypeError("Parameter 2 must be of type Color.")
+        }
         const luminance1 = Color.luminance(color1.rgb) + 0.05;
         const luminance2 = Color.luminance(color2.rgb) + 0.05;
         return luminance2>luminance1 ? luminance2/luminance1 : luminance1/luminance2;

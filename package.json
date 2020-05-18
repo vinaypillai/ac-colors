@@ -1,6 +1,6 @@
 {
   "name": "ac-colors",
-  "version": "1.0.4",
+  "version": "1.1.0",
   "description": "ac-colors is a reactive JavaScript color library that can freely convert between RGB, HSL, HEX, XYZ, LAB, and LCHab, as well as handle random color generation and contrast ratio calculation.",
   "main": "index.min.js",
   "directories": {

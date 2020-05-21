@@ -57,9 +57,15 @@ ac-colors is a reactive JavaScript color library that can freely convert between
 npm install --save ac-colors
 ```
 ### Browser
+#### Download
 Download the minified transpiled [ac-colors.min.js](https://raw.githubusercontent.com/vinaypillai/ac-colors/master/dist/ac-colors.min.js) and include it in a `<script>` tag
 ``` html
 <script src="ac-colors.min.js"></script>
+```
+#### CDN
+Alternatively add this `<script>` tag to your body to load the minified version from a CDN.
+```html
+<script src="https://cdn.jsdelivr.net/npm/ac-colors@1/dist/ac-colors.min.js"></script>
 ```
 ## Making a Color object
 The easiest way to get started with color conversion in ac-colors is by creating a Color object. The constructor takes  an object with up to four deconstructed properties which help determine how to convert and format color output:

@@ -33,7 +33,6 @@
   "bugs": {
     "url": "https://github.com/vinaypillai/ac-colors/issues"
   },
-  "publishConfig": { "registry": "https://npm.pkg.github.com/" },
   "homepage": "https://github.com/vinaypillai/ac-colors#readme",
   "devDependencies": {
     "babel-eslint": "^10.1.0",

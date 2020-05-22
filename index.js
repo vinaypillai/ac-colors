@@ -246,18 +246,21 @@ class Color{
     let invR = invCompand(cR);
     let invG = invCompand(cG);
     let invB = invCompand(cB);
-    let x = 0.4124564 * invR + 0.3575761 * invG + 0.1804375 * invB;
-    let y = 0.2126729 * invR + 0.7151522 * invG + 0.0721750 * invB;
-    let z = 0.0193339 * invR + 0.1191920 * invG + 0.9503041 * invB;
+    let x = 0.4124 * invR + 0.3576 * invG + 0.1805 * invB;
+    let y = 0.2126 * invR + 0.7152 * invG + 0.0722 * invB;
+    let z = 0.0193 * invR + 0.1192 * invG + 0.9505 * invB;
     return [x * 100, y * 100, z * 100];
   }
   static xyzToRgb(xyz){
     let x = xyz[0] / 100;
     let y = xyz[1] / 100;
     let z = xyz[2] / 100;
-    let invR = 3.2404542 * x - 1.5371385 * y - 0.4985314 * z;
-    let invG = -0.9692660 * x + 1.8760108 * y + 0.0415560 * z;
-    let invB = 0.0556434 * x + -0.2040259 * y + 1.0572252 * z;
+    let invR = 3.2406254773200533 * x - 1.5372079722103187 * y
+      - 0.4986285986982479 * z;
+    let invG = -0.9689307147293197 * x + 1.8757560608852415 * y
+      + 0.041517523842953964 * z;
+    let invB = 0.055710120445510616 * x + -0.2040210505984867 * y
+      + 1.0569959422543882 * z;
     let compand = (c) => c <= 0.0031308 ? 12.92 * c
       : 1.055 * Math.pow(c, 1 / 2.4) - 0.055;
     let cR = compand(invR);
@@ -267,7 +270,7 @@ class Color{
   }
   // Lab
   static xyzToLab(xyz){
-    let d65White = [95.04, 100, 108.8840];
+    let d65White = [95.05, 100, 108.9];
     let xR = xyz[0] / d65White[0];
     let yR = xyz[1] / d65White[1];
     let zR = xyz[2] / d65White[2];
@@ -286,7 +289,7 @@ class Color{
     let L = lab[0];
     let a = lab[1];
     let b = lab[2];
-    let d65White = [95.04, 100, 108.8840];
+    let d65White = [95.05, 100, 108.9];
     let eps = 216 / 24389;
     let kap = 24389 / 27;
     let fY = (L + 16) / 116;

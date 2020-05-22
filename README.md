@@ -2,7 +2,7 @@
 
 [![NPM](https://nodei.co/npm/ac-colors.png?downloads=true&downloadRank=true&stars=true)](https://www.npmjs.com/package/ac-colors)
 
-![package release version badge](https://img.shields.io/github/v/release/vinaypillai/ac-colors) ![travis ci status badge](https://img.shields.io/travis/com/vinaypillai/ac-colors) ![Coveralls coverage badge](https://coveralls.io/repos/github/vinaypillai/ac-colors/badge.svg?branch=master) ![dependecy status badge](https://img.shields.io/librariesio/release/npm/ac-colors) ![mit license badge](https://img.shields.io/npm/l/ac-colors)
+![package release version badge](https://img.shields.io/github/v/release/vinaypillai/ac-colors) ![minified size badge](https://img.shields.io/bundlephobia/min/ac-colors) ![travis ci status badge](https://img.shields.io/travis/com/vinaypillai/ac-colors) ![Coveralls coverage badge](https://coveralls.io/repos/github/vinaypillai/ac-colors/badge.svg?branch=master) ![dependecy status badge](https://img.shields.io/librariesio/release/npm/ac-colors) ![mit license badge](https://img.shields.io/npm/l/ac-colors)
 
 ac-colors is a reactive JavaScript color library that can freely convert between RGB, HSL, HEX, XYZ, LAB, and LCHab, as well as handle random color generation and contrast ratio calculation. A live color picker running on ac-colors can be found at [http://colors.acutecomponents.com/](http://colors.acutecomponents.com/).
 
@@ -222,16 +222,16 @@ The `lab` property is a reactive getter and setter for the three element array r
 ```javascript
 let black = new Color();
 console.log(black.lab); // [0,0,0]
-black.kab = [24.272,7.853,-17.538];
+black.lab = [24.272,7.853,-17.538];
 console.log(black.rgbString); // RGB(55, 55, 84)
 ```
 #### `labString` 
 The `labString` property is a formatted string output for the lab color. It is  impacted by the Color object's `precision` and `capitalize` values.
 ```javascript
 let white = new Color({"color":[255,255,255]});
-console.log(white.labString) // LAB(100.000, 0.012, 0.001)
+console.log(white.labString) // LAB(100.000, 0.000, 0.000)
 white.capitalize = false;
-console.log(white.labString) // lab(100.000, 0.012, 0.001)
+console.log(white.labString) // lab(100.000, 0.000, 0.000)
 ```
 #### `lchab` 
 The `lchab` property is a reactive getter and setter for the three element array representing the colors [l,c,h] values.
@@ -245,26 +245,26 @@ console.log(black.rgbString); // RGB(55, 55, 84)
 The `lchabString` property is a formatted string output for the lab color. It is  impacted by the Color object's `precision` and `capitalize` values. However, the capitalization is inverted for the subscripted 'ab'.
 ```javascript
 let white = new Color({"color":[255,255,255]});
-console.log(white.lchabString) // LCHab(100.000, 0.012,2.890)
+console.log(white.lchabString) // LCHab(100.000, 0.000,0.000)
 white.capitalize = false;
-console.log(white.lchabString) // lchAB(100.000, 0.012,2.890)
+console.log(white.lchabString) // lchAB(100.000, 0.000,0.000)
 ```
 #### `precision` 
 The `precision` property is a reactive formatting property that controls the number of decimal places outputted from a formatted string property. It is set during object initialization, but can be updated at any time.
 ```javascript
 let white = new Color({"color":[255,255,255],"precision":3});
-console.log(white.lchabString) // LCHab(100.000, 0.012,2.890)
+console.log(white.lchabString) // LCHab(100.000, 0.000,0.000)
 white.precision = 1;
-console.log(white.lchabString) // LCHab(100.0, 0.0,2.9))
+console.log(white.lchabString) // LCHab(100.0, 0.0,0.0))
 ```
 
 #### `capitalize` 
 The `capitalize` property is a reactive formatting property that controls the capitalization of a formatted string property. It is set during object initialization, but can be updated at any time.
 ```javascript
 let white = new Color({"color":[255,255,255], "capitalize":false});
-console.log(white.lchabString) // lchAB(100.000, 0.012,2.890)
+console.log(white.lchabString) // lchAB(100.000, 0.000,0.000)
 white.capitalize = true;
-console.log(white.lchabString) // LCHab(100.000, 0.012,2.890)
+console.log(white.lchabString) // LCHab(100.000, 0.000,0.000)
 ```
 ### Static Methods
 Although it is easier to handle color conversion by creating Color objects and making use of the automatic type conversion, ac-colors supports manual color conversion using the underlying static methods. In addition, static methods are provided for handling random color generation and color contrast ratio checking.
@@ -297,7 +297,7 @@ console.log(Color.hexToRgb("#552e3a")); // [85,46,58]
 This method takes in a three element array `[r,g,b]` representing a color's rgb values, and returns a three element array `[x,y,z]` representing the color's xyz values
 ```javascript
 // Color.rgbToXyz(rgb)
-console.log(Color.rgbToXyz([85,46,58])); // [5.487210819926342,4.191199198154069,4.522146326583249]
+console.log(Color.rgbToXyz([85,46,58])); // [5.487028215922665, 4.19077333446813, 4.522689110429709]
 ```
 #### `Color.xyzToRgb`
 This method takes in a three element array `[x,y,z]` representing the color's xyz values and returns a three element array `[r,g,b]` representing a color's rgb values.
@@ -309,25 +309,25 @@ console.log(Color.xyzToRgb([5.487,4.191,4.522])); // [85,46,58]
 This method takes in a three element array `[x,y,z]` representing the color's xyz values and returns a three element array `[l,a,b]` representing a color's lab values.
 ```javascript
 // Color.xyzToLab(xyz)
-console.log(Color.xyzToLab([5.487,4.191,4.522])); // [24.293087120125165,19.569939475918424, 0.21036055335774684]
+console.log(Color.xyzToLab([5.487,4.191,4.522])); // [24.293087120125165, 19.563162207233198, 0.21375272337743612]
 ```
 #### `Color.labToXyz`
 This method takes in a three element array `[l,a,b]` representing a color's lab values. and returns a three element array `[x,y,z]` representing the color's xyz values.
 ```javascript
 // Color.labToXyz(lab)
-console.log(Color.labToXyz([24.294,19.570,0.211])); // [5.487340335536105,4.191284860245909,4.5221830392095095]
+console.log(Color.labToXyz([24.294,19.570,0.211])); // [5.487917707204406, 4.191284860245909, 4.522847553083241]
 ```
 #### `Color.labToLCHab`
 This method takes in a three element array `[l,a,b]` representing a color's lab values. and returns a three element array `[l,c,h]` representing the color's LCHab values.
 ```javascript
 // Color.labToLCHab(lab)
-console.log(Color.labToLCHab([24.294,19.570,0.211])); // [24.294,19.57113744778264,0.617728209288702]
+console.log(Color.labToLCHab([24.294,19.570,0.211])); // [24.294, 19.57113744778264, 0.617728209288702]
 ```
 #### `Color.lchABToLab`
 This method takes in a three element array `[l,c,h]` representing a color's LCHab values. and returns a three element array `[l,a,b]` representing the color's lab values.
 ```javascript
 // Color.lchABToLab(lchAB)
-console.log(Color.lchABToLab([24.294,19.571,0.617])); // [24.294, 19.56986524034229,0.21074979203493507]
+console.log(Color.lchABToLab([24.294,19.571,0.617])); // [24.294, 19.56986524034229, 0.21074979203493507]
 ```
 #### `Color.luminance`
 This method takes in a three element array and a string representing its type and returns its [relative luminance](https://www.w3.org/TR/WCAG20/#relativeluminancedef). Default type is `"rgb"`.

@@ -253,7 +253,7 @@ describe("Color",function(){
     describe("#rgbToXyz",function(){
         context(`Input:"${[85,46,58]}`,function(){
             it("should returns a three element array `[x,y,z]`",function(){
-                assert.deepEqual(Color.rgbToXyz([85,46,58]),[5.487210819926342,4.191199198154069,4.522146326583249]);
+                assert.deepEqual(Color.rgbToXyz([85,46,58]),[5.487028215922665,4.19077333446813,4.522689110429709]);
             })
         })
     })
@@ -267,14 +267,14 @@ describe("Color",function(){
     describe("#xyzToLab",function(){
         context(`Input:"${[5.487,4.191,4.522]}`,function(){
             it("should returns a three element array `[l,a,b]`",function(){
-                assert.deepEqual(Color.xyzToLab([5.487,4.191,4.522]),[24.293087120125165,19.569939475918424, 0.21036055335774684]);
+                assert.deepEqual(Color.xyzToLab([5.487,4.191,4.522]),[24.293087120125165,19.563162207233198, 0.21375272337743612]);
             })
         })
     })
     describe("#labToXyz",function(){
         context(`Input:"${[24.294,19.570,0.211]}`,function(){
             it("should returns a three element array `[x,y,z]`",function(){
-                assert.deepEqual(Color.labToXyz([24.294,19.570,0.211]),[5.487340335536105,4.191284860245909,4.5221830392095095]);
+                assert.deepEqual(Color.labToXyz([24.294,19.570,0.211]),[5.487917707204406,4.191284860245909,4.522847553083241]);
             })
         })
     })
@@ -413,7 +413,7 @@ describe("Color",function(){
             })
         })
     })
-    describe("Reacitivity tests",function(){
+    describe("Reactivity tests",function(){
         context("Initial color: green color object",async function(){
             it("should return a rgbString",function(){
                 const green = new Color({"color":"#00FF00","type":"hex"});
@@ -439,7 +439,7 @@ describe("Color",function(){
                 assert.strictEqual(green.hexString,"#ff0000")
                 green.lab = [32.297, 79.194, -107.859];
                 green.precision = 5;
-                assert.strictEqual(green.lchabString,"lchAB(32.29701, 133.81132, 306.28752)")
+                assert.strictEqual(green.lchabString,"lchAB(32.30259, 133.80605, 306.28868)")
             })
             it("should return a uppercase 5 precision lchabString",function(){
                 const green = new Color({"color":"#00FF00","type":"hex"});
@@ -449,7 +449,7 @@ describe("Color",function(){
                 green.lab = [32.297, 79.194, -107.859];
                 green.precision = 5;
                 green.capitalize = true; 
-                assert.strictEqual(green.lchabString,"LCHab(32.29701, 133.81132, 306.28752)")
+                assert.strictEqual(green.lchabString,"LCHab(32.30259, 133.80605, 306.28868)")
             })
             it("should return a lowercase 5 precision xyzString",function(){
                 const green = new Color({"color":"#00FF00","type":"hex"});
@@ -458,7 +458,7 @@ describe("Color",function(){
                 assert.strictEqual(green.hexString,"#ff0000")
                 green.lab = [32.297, 79.194, -107.859];
                 green.precision = 5;
-                assert.strictEqual(green.xyzString,"xyz(18.04375, 7.21750, 95.03041)")
+                assert.strictEqual(green.xyzString,"xyz(18.05000, 7.22000, 95.05000)")
             })
             it("should return a uppercase 5 precision xyzString",function(){
                 const green = new Color({"color":"#00FF00","type":"hex"});
@@ -468,7 +468,7 @@ describe("Color",function(){
                 green.lab = [32.297, 79.194, -107.859];
                 green.precision = 5;
                 green.capitalize = true; 
-                assert.strictEqual(green.xyzString,"XYZ(18.04375, 7.21750, 95.03041)")
+                assert.strictEqual(green.xyzString,"XYZ(18.05000, 7.22000, 95.05000)")
             })
             it("should return a lowercase 5 precision labString",function(){
                 const green = new Color({"color":"#00FF00","type":"hex"});
@@ -477,7 +477,7 @@ describe("Color",function(){
                 assert.strictEqual(green.hexString,"#ff0000")
                 green.lab = [32.297, 79.194, -107.859];
                 green.precision = 5;
-                assert.strictEqual(green.labString,"lab(32.29701, 79.19457, -107.85958)")
+                assert.strictEqual(green.labString,"lab(32.30259, 79.19364, -107.85373)")
             })
             it("should return a uppercase 5 precision labString",function(){
                 const green = new Color({"color":"#00FF00","type":"hex"});
@@ -487,7 +487,7 @@ describe("Color",function(){
                 green.lab = [32.297, 79.194, -107.859];
                 green.precision = 5;
                 green.capitalize = true; 
-                assert.strictEqual(green.labString,"LAB(32.29701, 79.19457, -107.85958)")
+                assert.strictEqual(green.labString,"LAB(32.30259, 79.19364, -107.85373)")
             })
         })
         context("Supply color from random and test cloning",function(){

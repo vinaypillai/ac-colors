@@ -1,11 +1,7 @@
+(function(f){if(typeof exports==="object"&&typeof module!=="undefined"){module.exports=f()}else if(typeof define==="function"&&define.amd){define([],f)}else{var g;if(typeof window!=="undefined"){g=window}else if(typeof global!=="undefined"){g=global}else if(typeof self!=="undefined"){g=self}else{g=this}g.Color = f()}})(function(){var define,module,exports;return (function(){function r(e,n,t){function o(i,f){if(!n[i]){if(!e[i]){var c="function"==typeof require&&require;if(!f&&c)return c(i,!0);if(u)return u(i,!0);var a=new Error("Cannot find module '"+i+"'");throw a.code="MODULE_NOT_FOUND",a}var p=n[i]={exports:{}};e[i][0].call(p.exports,function(r){var n=e[i][1][r];return o(n||r)},p,p.exports,r,e,n,t)}return n[i].exports}for(var u="function"==typeof require&&require,i=0;i<t.length;i++)o(t[i]);return o}return r})()({1:[function(require,module,exports){
 /** Class representing a color. */
 class Color {
-  /** List of valid color spaces */
   static validTypes = ['rgb', 'hex', 'hsl', 'xyz', 'lab', 'lchab'];
-
-  /** d65 standard illuminant in XYZ */
-  static d65 = [95.05, 100, 108.9];
-
   /**
   * Create a color
   * @param {Object} config - Data for color and display preferences
@@ -23,12 +19,6 @@ class Color {
     this.precision = precision;
     this.capitalize = capitalize;
   }
-
-  /**
-  * Update conversions for color
-  * @param {string|number[]} color - Color tuple or hexcode
-  * @param {string} [type='rgb'] - Color space
-  */
   updateColor(color, type = 'rgb') {
     let rgb;
     if (typeof type !== 'string') {
@@ -72,177 +62,85 @@ class Color {
       this.updateColor(rgb, 'rgb');
     }
   }
-
-  /**
-  * Get the underlying srgb tuple
-  * @return {number[]} The srgb tule
-  */
+  // Getters and Setters
+  // RGB
   get rgb() {
     return this._rgb;
   }
-
-  /**
-  * Set the underlying srgb tuple
-  * @param {number[]} rgb - 3 element srgb tuple
-  */
-  set rgb(rgb) {
-    this.updateColor(rgb, 'rgb');
-  }
-
-  /**
-  * Get the formatted rgb string
-  * @return {string} The rgb string
-  */
   get rgbString() {
     const str = 'RGB(' + this.rgb.join(', ') + ')';
     return (this.capitalize) ? str.toUpperCase() : str.toLowerCase();
   }
-
-  /**
-  * Get the underlying hsl tuple
-  * @return {number[]} The hsl tule
-  */
+  set rgb(rgb) {
+    this.updateColor(rgb, 'rgb');
+  }
+  // HSL
   get hsl() {
     return this._hsl;
   }
-
-  /**
-  * Set the underlying hsl tuple
-  * @param {number[]} hsl - 3 element hsl tuple
-  */
-  set hsl(hsl) {
-    this.updateColor(hsl, 'hsl');
-  }
-
-  /**
-  * Get the formatted hsl string
-  * @return {string} The hsl string
-  */
   get hslString() {
     const truncHSL = this.hsl.map((x) => x.toFixed(this.precision));
     const str = 'HSL(' + truncHSL.join(', ') + ')';
     return (this.capitalize) ? str.toUpperCase() : str.toLowerCase();
   }
-
-  /**
-  * Get the underlying hex code
-  * @return {string} The hexcode
-  */
+  set hsl(hsl) {
+    this.updateColor(hsl, 'hsl');
+  }
+  // HEX
   get hex() {
     return this._hex;
   }
-
-  /**
-  * Set the underlying hex code
-  * @param {string} hex - 3 or 6 digit hexcode
-  */
-  set hex(hex) {
-    this.updateColor(hex, 'hex');
-  }
-
-  /**
-  * Get the formatted hex string
-  * @return {string} The hex string
-  */
   get hexString() {
     const str = this._hex;
     return (this.capitalize) ? str.toUpperCase() : str.toLowerCase();
   }
-
-  /**
-  * Get the underlying xyz tuple
-  * @return {number[]} The xyz tule
-  */
+  set hex(hex) {
+    this.updateColor(hex, 'hex');
+  }
+  // XYZ
   get xyz() {
     return this._xyz;
   }
-
-  /**
-  * Set the underlying xyz tuple
-  * @param {number[]} xyz - 3 element xyz tuple
-  */
-  set xyz(xyz) {
-    this.updateColor(xyz, 'xyz');
-  }
-
-  /**
-  * Get the formatted xyz string
-  * @return {string} The xyz string
-  */
   get xyzString() {
     const truncXYZ = this.xyz.map((x) => x.toFixed(this.precision));
     const str = 'XYZ(' + truncXYZ.join(', ') + ')';
     return (this.capitalize) ? str.toUpperCase() : str.toLowerCase();
   }
-
-  /**
-  * Get the underlying lab tuple
-  * @return {number[]} The lab tule
-  */
+  set xyz(xyz) {
+    this.updateColor(xyz, 'xyz');
+  }
+  // LAB
   get lab() {
     return this._lab;
   }
-
-  /**
-  * Set the underlying lab tuple
-  * @param {number[]} lab - 3 element lab tuple
-  */
-  set lab(lab) {
-    this.updateColor(lab, 'lab');
-  }
-
-  /**
-  * Get the formatted lab string
-  * @return {string} The lab string
-  */
   get labString() {
     const truncLAB = this.lab.map((x) => x.toFixed(this.precision));
     const str = 'LAB(' + truncLAB.join(', ') + ')';
     return (this.capitalize) ? str.toUpperCase() : str.toLowerCase();
   }
-
-  /**
-  * Get the underlying lchab tuple
-  * @return {number[]} The lchab tule
-  */
+  set lab(lab) {
+    this.updateColor(lab, 'lab');
+  }
+  // LCHAB
   get lchab() {
     return this._lchab;
   }
-
-  /**
-  * Set the underlying lchab tuple
-  * @param {number[]} lchab - 3 element lchab tuple
-  */
-  set lchab(lchab) {
-    this.updateColor(lchab, 'lchab');
-  }
-
-  /**
-  * Get the formatted lchAB string
-  * @return {string} The lchAB string
-  */
   get lchabString() {
     const truncLCHAB = this.lchab.map((x) => x.toFixed(this.precision));
     return (this.capitalize) ? 'LCHab(' + truncLCHAB.join(', ') + ')' :
       'lchAB(' + truncLCHAB.join(', ') + ')';
   }
-
-  /**
-  * Convert a 3 element srgb tuple to a 3 element hsl tuple.
-  * @param {number[]} rgb - The srgb tuple
-  * @return {number[]} The hsl tuple
-  */
+  set lchab(lchab) {
+    this.updateColor(lchab, 'lchab');
+  }
+  // HSL
   static rgbToHsl(rgb) {
-    // Normalize rgb tuple to [0,1]
     const r1 = rgb[0] / 255;
     const g1 = rgb[1] / 255;
     const b1 = rgb[2] / 255;
-    // Lightness is average of max and min normalized rgb values
     const maxColor = Math.max(r1, g1, b1);
     const minColor = Math.min(r1, g1, b1);
     let L = (maxColor + minColor) / 2;
-    // Hue and saturation are only non zero if color is grey
-    // A color is grey if all r,g,b are all the same (maxColor===minColor)
     let S = 0;
     let H = 0;
     if (maxColor !== minColor) {
@@ -259,26 +157,20 @@ class Color {
         H = 4.0 + (r1 - g1) / (maxColor - minColor);
       }
     }
-    // Scale up to [0,100] for Lightnexx and saturation, [0,360) for Hue
     L = L * 100;
     S = S * 100;
     H = H * 60;
-    // Hue has a period of 360deg, if hue is negative, get positive hue
-    // by scaling h to (-360,0) and adding 360
-    H = (H < 0) ? H % 360 + 360 : H;
+    if (H < 0) {
+      H += 360;
+    }
     return [H, S, L];
   }
-
-  /**
-  * Convert a 3 element hsl tuple to a 3 element srgb tuple.
-  * @param {number[]} hsl - The hsl tuple
-  * @return {number[]} The srgb tuple
-  */
   static hslToRgb(hsl) {
     let h = hsl[0];
     let s = hsl[1];
     let l = hsl[2];
-    // Any nonfinite hsl is reset to 0
+    let r; let g; let b; let m;
+
     if (!isFinite(h)) {
       h = 0;
     }
@@ -288,34 +180,49 @@ class Color {
     if (!isFinite(l)) {
       l = 0;
     }
-    // Hue has a period of 360deg, if hue is negative, get positive hue
-    // by scaling h to (-360,0) and adding 360
-    h = (h < 0) ? h % 360 + 360 : h;
-    // Normalize saturation and lightness to [0,1], hue [0,6)
-    l /= 100;
-    s /= 100;
     h /= 60;
-    const c = (1 - Math.abs(2 * l - 1)) * s;
-    const x = c * (1 - Math.abs(h % 2 - 1));
-    const m = l - c / 2;
-    let rgb1;
-    if (h < 1) {
-      rgb1 = [c, x, 0];
-    } else if (h < 2) {
-      rgb1 = [x, c, 0];
-    } else if (h < 3) {
-      rgb1 = [0, c, x];
-    } else if (h < 4) {
-      rgb1 = [0, x, c];
-    } else if (h < 5) {
-      rgb1 = [x, 0, c];
-    } else {
-      rgb1 = [c, 0, x];
-    }
-    const rgb = rgb1.map((val) => (val + m) * 255);
-    return rgb;
-  }
+    if (h < 0) h = 6 - (-h % 6);
+    h %= 6;
 
+    s = Math.max(0, Math.min(1, s / 100));
+    l = Math.max(0, Math.min(1, l / 100));
+
+    const c = (1 - Math.abs((2 * l) - 1)) * s;
+    const x = c * (1 - Math.abs((h % 2) - 1));
+
+    if (h < 1) {
+      r = c;
+      g = x;
+      b = 0;
+    } else if (h < 2) {
+      r = x;
+      g = c;
+      b = 0;
+    } else if (h < 3) {
+      r = 0;
+      g = c;
+      b = x;
+    } else if (h < 4) {
+      r = 0;
+      g = x;
+      b = c;
+    } else if (h < 5) {
+      r = x;
+      g = 0;
+      b = c;
+    } else {
+      r = c;
+      g = 0;
+      b = x;
+    }
+
+    m = l - c / 2;
+    r = Math.round((r + m) * 255);
+    g = Math.round((g + m) * 255);
+    b = Math.round((b + m) * 255);
+
+    return [r, g, b];
+  }
   // Hex
   static rgbToHex(rgb) {
     const r = rgb[0];
@@ -327,7 +234,6 @@ class Color {
     };
     return '#' + componentToHex(r) + componentToHex(g) + componentToHex(b);
   }
-
   static hexToRgb(hex) {
     // Expand shorthand form (e.g. '03F') to full form (e.g. '0033FF')
     const shorthandRegex = /^#?([a-f\d])([a-f\d])([a-f\d])$/i;
@@ -339,7 +245,6 @@ class Color {
     return result ? [parseInt(result[1], 16), parseInt(result[2], 16),
       parseInt(result[3], 16)] : null;
   }
-
   // XYZ
   static rgbToXyz(rgb) {
     const cR = rgb[0] / 255;
@@ -355,7 +260,6 @@ class Color {
     const z = 0.0193 * invR + 0.1192 * invG + 0.9505 * invB;
     return [x * 100, y * 100, z * 100];
   }
-
   static xyzToRgb(xyz) {
     const x = xyz[0] / 100;
     const y = xyz[1] / 100;
@@ -373,12 +277,12 @@ class Color {
     const cB = compand(invB);
     return [Math.round(cR * 255), Math.round(cG * 255), Math.round(cB * 255)];
   }
-
   // Lab
   static xyzToLab(xyz) {
-    const xR = xyz[0] / Color.d65[0];
-    const yR = xyz[1] / Color.d65[1];
-    const zR = xyz[2] / Color.d65[2];
+    const d65White = [95.05, 100, 108.9];
+    const xR = xyz[0] / d65White[0];
+    const yR = xyz[1] / d65White[1];
+    const zR = xyz[2] / d65White[2];
     const eps = 216 / 24389;
     const kap = 24389 / 27;
     const fwdTrans = (c) => c > eps ? Math.pow(c, 1 / 3) : (kap * c + 16) / 116;
@@ -390,11 +294,11 @@ class Color {
     const b = 200 * (fY - fZ);
     return [L, a, b];
   }
-
   static labToXyz(lab) {
     const L = lab[0];
     const a = lab[1];
     const b = lab[2];
+    const d65White = [95.05, 100, 108.9];
     const eps = 216 / 24389;
     const kap = 24389 / 27;
     const fY = (L + 16) / 116;
@@ -403,9 +307,8 @@ class Color {
     const xR = Math.pow(fX, 3) > eps ? Math.pow(fX, 3) : (116 * fX - 16) / kap;
     const yR = L > kap * eps ? Math.pow((L + 16) / 116, 3) : L / kap;
     const zR = Math.pow(fZ, 3) > eps ? Math.pow(fZ, 3) : (116 * fZ - 16) / kap;
-    return [xR * Color.d65[0], yR * Color.d65[1], zR * Color.d65[2]];
+    return [xR * d65White[0], yR * d65White[1], zR * d65White[2]];
   }
-
   // LCHab
   static labToLCHab(lab) {
     const a = lab[1];
@@ -415,7 +318,6 @@ class Color {
       Math.atan2(b, a) / Math.PI * 180 + 360;
     return [lab[0], c, h];
   }
-
   static lchABToLab(lchAB) {
     const c = lchAB[1];
     const h = lchAB[2];
@@ -423,7 +325,6 @@ class Color {
     const b = c * Math.sin(h / 180 * Math.PI);
     return [lchAB[0], a, b];
   }
-
   // Misc
   static luminance(color, type = 'rgb') {
     if (typeof type !== 'string') {
@@ -451,11 +352,9 @@ class Color {
     const l = ((0.2126 * r) + (0.7152 * g) + (0.0722 * b));
     return l;
   }
-
   static random() {
     return new Color({color: [255, 255, 255].map((n) => n * Math.random())});
   }
-
   static randomOfType(type = 'rgb') {
     if (typeof type !== 'string') {
       throw new TypeError('Parameter 1 must be of type string.');
@@ -467,7 +366,6 @@ class Color {
     const randColor = Color.random();
     return randColor[type];
   }
-
   static randomOfTypeFormatted(type = 'rgb', capitalize = true, precision = 3) {
     if (typeof type !== 'string') {
       throw new TypeError('Parameter 1 must be of type string.');
@@ -481,7 +379,6 @@ class Color {
     randColor.precision = precision;
     return randColor[type + 'String'];
   }
-
   static contrastTextColor(color, type = 'rgb') {
     if (typeof type !== 'string') {
       throw new TypeError('Parameter 2 must be of type string.');
@@ -504,7 +401,6 @@ class Color {
       return '#000000';
     }
   }
-
   static contrastRatio(color1, color2) {
     if (!(color1 instanceof Color)) {
       throw new TypeError('Parameter 1 must be of type Color.');
@@ -519,3 +415,6 @@ class Color {
   }
 }
 module.exports = Color;
+
+},{}]},{},[1])(1)
+});

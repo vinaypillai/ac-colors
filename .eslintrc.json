@@ -3,9 +3,11 @@
     "parserOptions": {
         "ecmaVersion": 2017
     },
-
     "env": {
         "es6": true
     },
-    "extends":"strongloop"
+    "extends":["strongloop","google"],
+    "rules":{
+        "lines-between-class-members": ["error", "always"]
+    }
 }

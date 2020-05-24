@@ -4,7 +4,7 @@
 
 ![package release version badge](https://img.shields.io/github/v/release/vinaypillai/ac-colors) ![minified size badge](https://img.shields.io/bundlephobia/min/ac-colors) ![travis ci status badge](https://img.shields.io/travis/com/vinaypillai/ac-colors) ![Coveralls coverage badge](https://coveralls.io/repos/github/vinaypillai/ac-colors/badge.svg?branch=master) ![dependency status badge](https://img.shields.io/librariesio/release/npm/ac-colors) ![mit license badge](https://img.shields.io/npm/l/ac-colors)
 
-ac-colors is a reactive JavaScript color library that can freely convert between RGB, HSL, HEX, XYZ, LAB, and LCHab, as well as handle random color generation and contrast ratio calculation. A live color picker running on ac-colors can be found at [http://colors.acutecomponents.com/](http://colors.acutecomponents.com/).
+ac-colors is a reactive JavaScript color library that can freely convert between sRGB, HSL, HEX, XYZ, LAB, and LCHab, as well as handle random color generation and contrast ratio calculation. A live color picker running on ac-colors can be found at [http://colors.acutecomponents.com/](http://colors.acutecomponents.com/).
 
 * [Installation](#Installation)
     * [Node.js](#node.js)
@@ -376,7 +376,16 @@ console.log(Color.contrastRatio(red,blue)); // 3.9984767707539985
 
 ```
 ## Acknowledgements
-Thanks to Jonas Jacek for providing some of the  [sample data](https://jonasjacek.github.io/colors/) used for testing the color conversion.
+Thanks to Jonas Jacek for providing some of the  [sample data](https://jonasjacek.github.io/colors/) used for testing the color conversion. Additional resources for implementing color space transformations, including the ones used in this library, are listed below:
+* [http://www.color.org/iccmax/profiles/sRGB_D65_colorimetric.icc](http://www.color.org/iccmax/profiles/sRGB_D65_colorimetric.icc)
+* [https://graphics.stanford.edu/courses/cs148-10-summer/docs/2010--kerr--cie_xyz.pdf](https://graphics.stanford.edu/courses/cs148-10-summer/docs/2010--kerr--cie_xyz.pdf)
+* [http://www.color.org/sRGB.pdf](http://www.color.org/sRGB.pdf)
+* [https://www.sis.se/api/document/preview/562720/](https://www.sis.se/api/document/preview/562720/)
+* [http://coecsl.ece.illinois.edu/ge423/spring05/group8/finalproject/hsv_writeup.pdf](http://coecsl.ece.illinois.edu/ge423/spring05/group8/finalproject/hsv_writeup.pdf)
+* [https://www.cs.rit.edu/~ncs/color/t_convert.html#XYZ%20to%20CIELUV%20&%20CIELUV%20to%20XYZ](https://www.cs.rit.edu/~ncs/color/t_convert.html#XYZ%20to%20CIELUV%20&%20CIELUV%20to%20XYZ)
+* [http://docs-hoffmann.de/cielab03022003.pdf](http://docs-hoffmann.de/cielab03022003.pdf)
+* [http://faculty.washington.edu/jokelly/gammaFaq1.htm](http://faculty.washington.edu/jokelly/gammaFaq1.htm)
+* [http://www.brucelindbloom.com/index.html](http://www.brucelindbloom.com/index.html)
 ## License
 Copyright 2020 Vinay Pillai
 

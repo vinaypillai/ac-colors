@@ -8,6 +8,8 @@
     },
     "extends":["strongloop","google"],
     "rules":{
-        "lines-between-class-members": ["error", "always"]
+        "lines-between-class-members": ["error", "always"],
+        "multiline-ternary": ["error", "always-multiline"],
+        "arrow-parens": ["error", "always"]
     }
 }

@@ -28,6 +28,7 @@ class Color {
   * Update conversions for color
   * @param {string|number[]} color - Color tuple or hexcode
   * @param {string} [type='rgb'] - Color space
+  * @throws Will throw an error if type is not a string or not a supported type
   */
   updateColor(color, type = 'rgb') {
     let rgb;
@@ -223,7 +224,8 @@ class Color {
   */
   get lchabString() {
     const truncLCHAB = this.lchab.map((x) => x.toFixed(this.precision));
-    return (this.capitalize) ? 'LCHab(' + truncLCHAB.join(', ') + ')' :
+    return (this.capitalize) ?
+      'LCHab(' + truncLCHAB.join(', ') + ')' :
       'lchAB(' + truncLCHAB.join(', ') + ')';
   }
 
@@ -312,69 +314,110 @@ class Color {
     } else {
       rgb1 = [c, 0, x];
     }
-    const rgb = rgb1.map((val) => (val + m) * 255);
+    const rgb = rgb1.map((val) => Math.round((val + m) * 255));
     return rgb;
   }
 
-  // Hex
+  /**
+  * Convert a 3 element srgb tuple to a six digit hexcode
+  * @param {number[]} rgb - The srgb tuple
+  * @return {string} The hexcode
+  */
   static rgbToHex(rgb) {
     const r = rgb[0];
     const g = rgb[1];
     const b = rgb[2];
-    const componentToHex = function componentToHex(c) {
+    // Use built-in toString to convert to hexadecimal
+    // Prepend single digit conversion with '0'
+    const hexChar = function hexChar(c) {
       const hex = c.toString(16);
       return hex.length === 1 ? '0' + hex : hex;
     };
-    return '#' + componentToHex(r) + componentToHex(g) + componentToHex(b);
+    return '#' + hexChar(r) + hexChar(g) + hexChar(b);
   }
 
+  /**
+  * Convert a three or six digit hexcode to srgb
+  * @param {string} hex - The hexcode
+  * @return {number[]} The srgb tuple
+  */
   static hexToRgb(hex) {
-    // Expand shorthand form (e.g. '03F') to full form (e.g. '0033FF')
+    // If 3 digit hexcode then double each digit 6 digit
     const shorthandRegex = /^#?([a-f\d])([a-f\d])([a-f\d])$/i;
     hex = hex.replace(shorthandRegex, function(m, r, g, b) {
       return r + r + g + g + b + b;
     });
-
+    // Use built-in base16 parser to convert to rgb
     const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
-    return result ? [parseInt(result[1], 16), parseInt(result[2], 16),
-      parseInt(result[3], 16)] : null;
+    // Cant use map since first element of result is the whole matched string
+    return result ?
+      [parseInt(result[1], 16), parseInt(result[2], 16),
+        parseInt(result[3], 16)] :
+      null;
   }
 
-  // XYZ
+  /**
+  * Convert a 3 element srgb tuple to a 3 element xyz tuple.
+  * @param {number[]} rgb - The srgb tuple
+  * @return {number[]} The xyz tuple
+  */
   static rgbToXyz(rgb) {
+    // Normalise rgb to [0,1]
     const cR = rgb[0] / 255;
     const cG = rgb[1] / 255;
     const cB = rgb[2] / 255;
-    const invCompand = (c) => c <= 0.04045 ? c / 12.92 :
+    // sRGB is a gamma corrected format (a method of adjusting color
+    // to match non linear human perception of light) gamma correction
+    // must undone. The inverse function is linear below a corrected
+    // value of 0.04045 since gamma correction is linear at 0.0031308
+    const invCompand = (c) => (c <= 0.04045) ?
+      c / 12.92 :
       Math.pow((c + 0.055) / 1.055, 2.4);
     const invR = invCompand(cR);
     const invG = invCompand(cG);
     const invB = invCompand(cB);
+    // Linear rgb is then undergoes a forward transformation to xyz
     const x = 0.4124 * invR + 0.3576 * invG + 0.1805 * invB;
     const y = 0.2126 * invR + 0.7152 * invG + 0.0722 * invB;
     const z = 0.0193 * invR + 0.1192 * invG + 0.9505 * invB;
+    // xyz scaled to [0,100]
     return [x * 100, y * 100, z * 100];
   }
 
+  /**
+  * Convert a 3 element xyz tuple to a 3 element srgb tuple.
+  * @param {number[]} xyz - The xyz tuple
+  * @return {number[]} The srgb tuple
+  */
   static xyzToRgb(xyz) {
+    // xyz is normalized to [0,1]
     const x = xyz[0] / 100;
     const y = xyz[1] / 100;
     const z = xyz[2] / 100;
+    // xyz is multiplied by the reverse transformation matrix to linear rgb
     const invR = 3.2406254773200533 * x - 1.5372079722103187 * y -
       0.4986285986982479 * z;
     const invG = -0.9689307147293197 * x + 1.8757560608852415 * y +
       0.041517523842953964 * z;
     const invB = 0.055710120445510616 * x + -0.2040210505984867 * y +
       1.0569959422543882 * z;
-    const compand = (c) => c <= 0.0031308 ? 12.92 * c :
+    // Linear rgb must be gamma corrected to normalized srgb. Gamma correction
+    // is linear for values <= 0.0031308 to avoid infinite log slope near zero
+    const compand = (c) => c <= 0.0031308 ?
+      12.92 * c :
       1.055 * Math.pow(c, 1 / 2.4) - 0.055;
     const cR = compand(invR);
     const cG = compand(invG);
     const cB = compand(invB);
+    // srgb is scaled to [0,255]
     return [Math.round(cR * 255), Math.round(cG * 255), Math.round(cB * 255)];
   }
 
-  // Lab
+  /**
+  * Convert a 3 element xyz tuple to a 3 element lab tuple.
+  * @param {number[]} xyz - The xyz tuple
+  * @return {number[]} The lab tuple
+  */
   static xyzToLab(xyz) {
     const xR = xyz[0] / Color.d65[0];
     const yR = xyz[1] / Color.d65[1];
@@ -391,6 +434,11 @@ class Color {
     return [L, a, b];
   }
 
+  /**
+  * Convert a 3 element lab tuple to a 3 element xyz tuple.
+  * @param {number[]} lab - The lab tuple
+  * @return {number[]} The xyz tuple
+  */
   static labToXyz(lab) {
     const L = lab[0];
     const a = lab[1];
@@ -406,16 +454,26 @@ class Color {
     return [xR * Color.d65[0], yR * Color.d65[1], zR * Color.d65[2]];
   }
 
-  // LCHab
+  /**
+  * Convert a 3 element lab tuple to a 3 element lchab tuple.
+  * @param {number[]} lab - The lab tuple
+  * @return {number[]} The lchab tuple
+  */
   static labToLCHab(lab) {
     const a = lab[1];
     const b = lab[2];
     const c = Math.sqrt(a * a + b * b);
-    const h = Math.atan2(b, a) >= 0 ? Math.atan2(b, a) / Math.PI * 180 :
+    const h = Math.atan2(b, a) >= 0 ?
+      Math.atan2(b, a) / Math.PI * 180 :
       Math.atan2(b, a) / Math.PI * 180 + 360;
     return [lab[0], c, h];
   }
 
+  /**
+  * Convert a 3 element lchab tuple to a 3 element lab tuple.
+  * @param {number[]} lchAB - The lchAB tuple
+  * @return {number[]} The lab tuple
+  */
   static lchABToLab(lchAB) {
     const c = lchAB[1];
     const h = lchAB[2];
@@ -424,7 +482,13 @@ class Color {
     return [lchAB[0], a, b];
   }
 
-  // Misc
+  /**
+  * Computes luminance of a 3 element tuple or hexcode
+  * @param {number[]|string} color - The color tuple or hexcode
+  * @param {string} [type='rgb'] - The color space
+  * @return {number} The luminance of the color
+  * @throws Will throw an error if type is not a string or not a supported type
+  */
   static luminance(color, type = 'rgb') {
     if (typeof type !== 'string') {
       throw new TypeError('Parameter 2 must be of type string.');
@@ -433,9 +497,12 @@ class Color {
     if (!Color.validTypes.includes(type)) {
       throw new TypeError(`Parameter 2 '${type}' is not a valid type.`);
     }
+    // Convert any non-rgb color to rgb
     if (type !== 'rgb') {
       color = (new Color({color, type})).rgb;
     }
+    // Converts color to luminance as denoted by y from the rgb to xyz
+    // conversions above
     for (let i = 0; i < color.length; i++) {
       color[i] /= 255;
       if (color[i] < 0.03928) {
@@ -452,10 +519,20 @@ class Color {
     return l;
   }
 
+  /**
+  * Returns a random new Color instance
+  * @return {Color} The new Color instance
+  */
   static random() {
     return new Color({color: [255, 255, 255].map((n) => n * Math.random())});
   }
 
+  /**
+  * Returns a random new Color tuple or hexcode
+  * @param {string} [type='rgb'] - The color space
+  * @return {number[]|string} The 3 element color tuple or hexcode
+  * @throws Will throw an error if type is not a string or not a supported type
+  */
   static randomOfType(type = 'rgb') {
     if (typeof type !== 'string') {
       throw new TypeError('Parameter 1 must be of type string.');
@@ -468,6 +545,14 @@ class Color {
     return randColor[type];
   }
 
+  /**
+  * Returns a random color's formatted string
+  * @param {string} [type='rgb'] - The color space
+  * @param {boolean} [capitalize=true] - Flag for output capitalization
+  * @param {number} [precision=3] - Number of decimals in output string
+  * @return {string} The formatted color string of the random color
+  * @throws Will throw an error if type is not a string or not a supported type
+  */
   static randomOfTypeFormatted(type = 'rgb', capitalize = true, precision = 3) {
     if (typeof type !== 'string') {
       throw new TypeError('Parameter 1 must be of type string.');
@@ -482,6 +567,14 @@ class Color {
     return randColor[type + 'String'];
   }
 
+  /**
+  * Returns white or black dependent on which has a greater contrast with the
+  * given color
+  * @param {number[]|string} color - The color tuple or hexcode
+  * @param {string} [type='rgb'] - The color space
+  * @return {string} The hexcode for white or black
+  * @throws Will throw an error if type is not a string or not a supported type
+  */
   static contrastTextColor(color, type = 'rgb') {
     if (typeof type !== 'string') {
       throw new TypeError('Parameter 2 must be of type string.');
@@ -505,6 +598,13 @@ class Color {
     }
   }
 
+  /**
+  * Computes the contrast ratio between two colors
+  * @param {Color} color1 - The first color
+  * @param {Color} color2 - The second color
+  * @return {number} The contrast ratio between the given colors
+  * @throws Will throw an error if either parameter is not a color instance
+  */
   static contrastRatio(color1, color2) {
     if (!(color1 instanceof Color)) {
       throw new TypeError('Parameter 1 must be of type Color.');
@@ -514,7 +614,8 @@ class Color {
     }
     const luminance1 = Color.luminance(color1.rgb) + 0.05;
     const luminance2 = Color.luminance(color2.rgb) + 0.05;
-    return luminance2 > luminance1 ? luminance2 / luminance1 :
+    return luminance2 > luminance1 ?
+      luminance2 / luminance1 :
       luminance1 / luminance2;
   }
 }

@@ -76,7 +76,7 @@ class Color {
 
   /**
   * Get the underlying srgb tuple
-  * @return {number[]} The srgb tule
+  * @return {number[]} The srgb tuple
   */
   get rgb() {
     return this._rgb;
@@ -101,7 +101,7 @@ class Color {
 
   /**
   * Get the underlying hsl tuple
-  * @return {number[]} The hsl tule
+  * @return {number[]} The hsl tuple
   */
   get hsl() {
     return this._hsl;
@@ -152,7 +152,7 @@ class Color {
 
   /**
   * Get the underlying xyz tuple
-  * @return {number[]} The xyz tule
+  * @return {number[]} The xyz tuple
   */
   get xyz() {
     return this._xyz;
@@ -178,7 +178,7 @@ class Color {
 
   /**
   * Get the underlying lab tuple
-  * @return {number[]} The lab tule
+  * @return {number[]} The lab tuple
   */
   get lab() {
     return this._lab;
@@ -204,7 +204,7 @@ class Color {
 
   /**
   * Get the underlying lchab tuple
-  * @return {number[]} The lchab tule
+  * @return {number[]} The lchab tuple
   */
   get lchab() {
     return this._lchab;

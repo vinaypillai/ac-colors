@@ -2,6 +2,28 @@ const process = require("process");
 const assert = require("chai").assert;
 const Color = require("../index.js");
 const testColors = require("./256colors.js")
+const colorMineColors = require("./sample-colors.js")
+/**
+* Check if two arrays are approximately the same
+* @param {Array} actual - The array of computed values
+* @param {Array} expected - The array of expected values
+* @param {number) [tolerance=0.1] - The variability for a value
+*/
+function almost(actual, expected, tolerance=0.1,message=""){
+    if(actual.length!=expected.length){
+        assert.fail();
+    }else{
+        expected.forEach((val,i)=>{
+            if(val+tolerance>=actual[i] && val-tolerance<=actual[i]){
+                assert.isOk(actual)
+            }else{
+                assert.fail(`Actual:[${actual}], Expected:[${expected}] 
+                    Expected ${actual[i]} to be within +/- ${tolerance} of ${val}
+                    ${message}`)
+            }
+        })
+    }
+}
 
 describe("Color",function(){
     describe("#constructor",function(){
@@ -187,6 +209,25 @@ describe("Color",function(){
                     })
                 })
             })  
+        })
+    })
+    describe.only("#constructor (w/color mine data)",function(){
+        colorMineColors.forEach((color, i)=>{
+            let keys = Color.validTypes;
+            context(`Input:"${color.hex} #${i+1}"`,function(){
+                keys.forEach((initKey)=>{
+                    keys.forEach((testKey)=>{
+                        it(`Input mode: ${initKey} - [${color[initKey]}], Output mode: ${testKey}`,function(){
+                            let initColor = new Color({"color":color[initKey],"type":initKey});
+                            if(testKey=="hex"){
+                                assert.strictEqual(initColor[testKey],color[testKey].toLowerCase());
+                            }else{
+                                almost(initColor[testKey],color[testKey],0.5)
+                            }
+                        })
+                    })
+                })
+            })
         })
     })
     describe("#updateColor",function(){
@@ -439,7 +480,7 @@ describe("Color",function(){
                 assert.strictEqual(green.hexString,"#ff0000")
                 green.lab = [32.297, 79.194, -107.859];
                 green.precision = 5;
-                assert.strictEqual(green.lchabString,"lchAB(32.30259, 133.80605, 306.28868)")
+                assert.strictEqual(green.lchabString,"lchAB(32.29700, 133.81051, 306.28747)")
             })
             it("should return a uppercase 5 precision lchabString",function(){
                 const green = new Color({"color":"#00FF00","type":"hex"});
@@ -449,7 +490,7 @@ describe("Color",function(){
                 green.lab = [32.297, 79.194, -107.859];
                 green.precision = 5;
                 green.capitalize = true; 
-                assert.strictEqual(green.lchabString,"LCHab(32.30259, 133.80605, 306.28868)")
+                assert.strictEqual(green.lchabString,"LCHab(32.29700, 133.81051, 306.28747)")
             })
             it("should return a lowercase 5 precision xyzString",function(){
                 const green = new Color({"color":"#00FF00","type":"hex"});
@@ -458,7 +499,7 @@ describe("Color",function(){
                 assert.strictEqual(green.hexString,"#ff0000")
                 green.lab = [32.297, 79.194, -107.859];
                 green.precision = 5;
-                assert.strictEqual(green.xyzString,"xyz(18.05000, 7.22000, 95.05000)")
+                assert.strictEqual(green.xyzString,"xyz(18.04553, 7.21750, 95.04349)")
             })
             it("should return a uppercase 5 precision xyzString",function(){
                 const green = new Color({"color":"#00FF00","type":"hex"});
@@ -468,7 +509,7 @@ describe("Color",function(){
                 green.lab = [32.297, 79.194, -107.859];
                 green.precision = 5;
                 green.capitalize = true; 
-                assert.strictEqual(green.xyzString,"XYZ(18.05000, 7.22000, 95.05000)")
+                assert.strictEqual(green.xyzString,"XYZ(18.04553, 7.21750, 95.04349)")
             })
             it("should return a lowercase 5 precision labString",function(){
                 const green = new Color({"color":"#00FF00","type":"hex"});
@@ -477,7 +518,7 @@ describe("Color",function(){
                 assert.strictEqual(green.hexString,"#ff0000")
                 green.lab = [32.297, 79.194, -107.859];
                 green.precision = 5;
-                assert.strictEqual(green.labString,"lab(32.30259, 79.19364, -107.85373)")
+                assert.strictEqual(green.labString,"lab(32.29700, 79.19400, -107.85900)")
             })
             it("should return a uppercase 5 precision labString",function(){
                 const green = new Color({"color":"#00FF00","type":"hex"});
@@ -487,40 +528,64 @@ describe("Color",function(){
                 green.lab = [32.297, 79.194, -107.859];
                 green.precision = 5;
                 green.capitalize = true; 
-                assert.strictEqual(green.labString,"LAB(32.30259, 79.19364, -107.85373)")
+                assert.strictEqual(green.labString,"LAB(32.29700, 79.19400, -107.85900)")
             })
         })
         context("Supply color from random and test cloning",function(){
             const color = Color.random();
-            it("should set same color",function(){
+            it(`RGB input [${color.rgb}] - should set approx same color`,function(){
                 const rgb = new Color();
                 rgb.rgb = color.rgb;
-                assert.deepEqual(rgb,color);
+                almost(rgb.rgb,color.rgb,0.1,"rgb-rgb");
+                almost(rgb.hsl,color.hsl,0.1,"rgb-hsl");
+                almost(rgb.xyz,color.xyz,0.1,"rgb-xyz");
+                almost(rgb.lab,color.lab,0.1,"rgb-lab");
+                almost(rgb.lchab,color.lchab,0.1,"rgb-lchab");
             })
-            it("should set same color",function(){
+            it(`HEX input [${color.hex}] - should set approx same color`,function(){
                 const hex = new Color();
                 hex.hex = color.hex;
-                assert.deepEqual(hex,color);
-            })
-            it("should set same color",function(){
+                almost(hex.rgb,color.rgb,0.1,"hex-rgb");
+                almost(hex.hsl,color.hsl,0.1,"hex-hsl");
+                almost(hex.xyz,color.xyz,0.1,"hex-xyz");
+                almost(hex.lab,color.lab,0.1,"hex-lab");
+                almost(hex.lchab,color.lchab,0.1,"hex-lchab");
+            });
+            it(`HSL input [${color.hsl}] - should set approx same color`,function(){
                 const hsl = new Color();
                 hsl.hsl = color.hsl;
-                assert.deepEqual(hsl,color);
+                almost(hsl.rgb,color.rgb,0.1,"hsl-rgb");
+                almost(hsl.hsl,color.hsl,0.1,"hsl-hsl");
+                almost(hsl.xyz,color.xyz,0.1,"hsl-xyz");
+                almost(hsl.lab,color.lab,0.1,"hsl-lab");
+                almost(hsl.lchab,color.lchab,0.1,"hsl-lchab");
             })
-            it("should set same color",function(){
+            it(`XYZ input [${color.xyz}] - should set approx same color`,function(){
                 const xyz = new Color();
                 xyz.xyz = color.xyz;
-                assert.deepEqual(xyz,color);
+                almost(xyz.rgb,color.rgb,0.1,"xyz-rgb");
+                almost(xyz.hsl,color.hsl,0.1,"xyz-hsl");
+                almost(xyz.xyz,color.xyz,0.1,"xyz-xyz");
+                almost(xyz.lab,color.lab,0.1,"xyz-lab");
+                almost(xyz.lchab,color.lchab,0.1,"xyz-lchab");
             })
-            it("should set same color",function(){
+            it(`LAB input [${color.lab}] - should set approx same color`,function(){
                 const lab = new Color();
                 lab.lab = color.lab;
-                assert.deepEqual(lab,color);
+                almost(lab.rgb,color.rgb,0.1,"lab-rgb");
+                almost(lab.hsl,color.hsl,0.1,"lab-hsl");
+                almost(lab.xyz,color.xyz,0.1,"lab-xyz");
+                almost(lab.lab,color.lab,0.1,"lab-lab");
+                almost(lab.lchab,color.lchab,0.1,"lab-lchab");
             })
-            it("should set same color",function(){
+            it(`LCHAB input [${color.lchab}] - should set approx same color`,function(){
                 const lchab = new Color();
                 lchab.lchab = color.lchab;
-                assert.deepEqual(lchab,color);
+                almost(lchab.rgb,color.rgb,0.1,"lchab-rgb");
+                almost(lchab.hsl,color.hsl,0.1,"lchab-hsl");
+                almost(lchab.xyz,color.xyz,0.1,"lchab-xyz");
+                almost(lchab.lab,color.lab,0.1,"lchab-lab");
+                almost(lchab.lchab,color.lchab,0.1,"lchab-lchab");
             })
         })
     })

@@ -5,6 +5,7 @@ class Color {
 
   /** d65 standard illuminant in XYZ */
   static d65 = [95.05, 100, 108.9];
+
   /**
   * Create a color
   * @param {Object} config - Data for color and display preferences
@@ -324,7 +325,7 @@ class Color {
     // by scaling h to (-360,0) and adding 360
     H = (H < 0) ? H % 360 + 360 : H;
     // Add zero to prevent signed zeros (force 0 rather than -0)
-    return [H+0, S+0, L+0];
+    return [H + 0, S + 0, L + 0];
   }
 
   /**
@@ -371,7 +372,7 @@ class Color {
       rgb1 = [c, 0, x];
     }
     // Add zero to prevent signed zeros (force 0 rather than -0)
-    const rgb = rgb1.map((val) => Math.round((val + m) * 255)+0);
+    const rgb = rgb1.map((val) => Math.round((val + m) * 255) + 0);
     return rgb;
   }
 
@@ -440,7 +441,7 @@ class Color {
     const z = 0.0193 * invR + 0.1192 * invG + 0.9505 * invB;
     // xyz scaled to [0,100]
     // Add zero to prevent signed zeros (force 0 rather than -0)
-    return [x * 100+0, y * 100+0, z * 100+0];
+    return [x * 100 + 0, y * 100 + 0, z * 100 + 0];
   }
 
   /**
@@ -470,8 +471,8 @@ class Color {
     const cB = compand(invB);
     // srgb is scaled to [0,255]
     // Add zero to prevent signed zeros (force 0 rather than -0)
-    return [Math.round(cR * 255)+0, Math.round(cG * 255)+0, 
-      Math.round(cB * 255)+0];
+    return [Math.round(cR * 255) + 0, Math.round(cG * 255) + 0,
+      Math.round(cB * 255) + 0];
   }
 
   /**
@@ -486,7 +487,9 @@ class Color {
     const eps = 216 / 24389;
     const kap = 24389 / 27;
     // Use cube root function if available for additional precision
-    const cbrt = (Math.cbrt != null) ? Math.cbrt : (val)=>Math.pow(val,1/3);
+    const cbrt = (Math.cbrt != null) ?
+      Math.cbrt :
+      (val) => Math.pow(val, 1 / 3);
     const fwdTrans = (c) => c > eps ? cbrt(c) : (kap * c + 16) / 116;
     const fX = fwdTrans(xR);
     const fY = fwdTrans(yR);
@@ -495,7 +498,7 @@ class Color {
     const a = 500 * (fX - fY);
     const b = 200 * (fY - fZ);
     // Add zero to prevent signed zeros (force 0 rather than -0)
-    return [L+0, a+0, b+0];
+    return [L + 0, a + 0, b + 0];
   }
 
   /**
@@ -516,24 +519,27 @@ class Color {
     const yR = L > kap * eps ? Math.pow((L + 16) / 116, 3) : L / kap;
     const zR = Math.pow(fZ, 3) > eps ? Math.pow(fZ, 3) : (116 * fZ - 16) / kap;
     // Add zero to prevent signed zeros (force 0 rather than -0)
-    return [xR * Color.d65[0]+0, yR * Color.d65[1]+0, zR * Color.d65[2]+0];
+    return [xR * Color.d65[0] + 0, yR * Color.d65[1] + 0,
+      zR * Color.d65[2] + 0];
   }
- 
+
   /**
   * Convert a 3 element lab tuple to a 3 element lchab tuple.
   * @param {number[]} lab - The lab tuple
   * @return {number[]} The lchab tuple
   */
   static labToLCHab(lab) {
-    console.log(lab)
+    const maxZeroTolerance = Math.pow(10,-13);
     const a = lab[1];
-    const b = lab[2];
+    // Since atan2 behaves unpredicably for non-zero values of b near 0,
+    // round b within the given tolerance
+    const b = (Math.abs(lab[2])<maxZeroTolerance) ? 0 : lab[2];
     const c = Math.sqrt(a * a + b * b);
     const h = Math.atan2(b, a) >= 0 ?
       Math.atan2(b, a) / Math.PI * 180 :
       Math.atan2(b, a) / Math.PI * 180 + 360;
     // Add zero to prevent signed zeros (force 0 rather than -0)
-    return [lab[0]+0, c+0, h+0];
+    return [lab[0] + 0, c + 0, h + 0];
   }
 
   /**
@@ -547,7 +553,7 @@ class Color {
     const a = c * Math.cos(h / 180 * Math.PI);
     const b = c * Math.sin(h / 180 * Math.PI);
     // Add zero to prevent signed zeros (force 0 rather than -0)
-    return [lchAB[0]+0, a+0, b+0];
+    return [lchAB[0] + 0, a + 0, b + 0];
   }
 
   /**
@@ -569,12 +575,14 @@ class Color {
     const v1 = 9 * y / (x + 15 * y + 3 * z);
     const u1 = 4 * x / (x + 15 * y + 3 * z);
     const yR = y / Yn;
-    const cbrt = (Math.cbrt != null) ? Math.cbrt : (val)=>Math.pow(val,1/3);
+    const cbrt = (Math.cbrt != null) ?
+      Math.cbrt :
+      (val) => Math.pow(val, 1 / 3);
     const L = (yR > eps) ? 116 * cbrt(yR, 1 / 3) - 16 : kap * yR;
     const u = 13 * L * (u1 - uR);
     const v = 13 * L * (v1 - vR);
     // Add zero to prevent signed zeros (force 0 rather than -0)
-    return [L+0, u+0, v+0];
+    return [L + 0, u + 0, v + 0];
   }
 
   /**
@@ -601,7 +609,7 @@ class Color {
     const x = (d - b) / (a - c);
     const z = x * a + b;
     // Add zero to prevent signed zeros (force 0 rather than -0)
-    return [x+0, y+0, z+0];
+    return [x + 0, y + 0, z + 0];
   }
 
   /**
@@ -613,13 +621,13 @@ class Color {
     const L = luv[0];
     const u = luv[1];
     const v = luv[2];
-    const c = Math.sqrt(u*u+v*v);
+    const c = Math.sqrt(u * u + v * v);
     // Math.atan2 returns angle in radians so convert to degrees
-    let h = Math.atan2(v,u)*180/Math.PI;
+    let h = Math.atan2(v, u) * 180 / Math.PI;
     // If hue is negative add 360
-    h = (h>=0) ? h : h + 360;
+    h = (h >= 0) ? h : h + 360;
     // Add zero to prevent signed zeros (force 0 rather than -0)
-    return [x+0, y+0, z+0];
+    return [L + 0, c + 0, h + 0];
   }
 
   /**
@@ -665,8 +673,8 @@ class Color {
   */
   static random() {
     return new Color({
-        color: [255, 255, 255].map((n) => Math.round(n * Math.random()))
-      });
+      color: [255, 255, 255].map((n) => Math.round(n * Math.random())),
+    });
   }
 
   /**

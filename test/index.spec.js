@@ -211,7 +211,7 @@ describe("Color",function(){
             })  
         })
     })
-    describe.only("#constructor (w/color mine data)",function(){
+    describe("#constructor (w/color mine data)",function(){
         colorMineColors.forEach((color, i)=>{
             let keys = Color.validTypes;
             context(`Input:"${color.hex} #${i+1}"`,function(){

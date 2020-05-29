@@ -1,8 +1,9 @@
 const process = require("process");
 const assert = require("chai").assert;
 const Color = require("../index.js");
-const testColors = require("./256colors.js")
-const colorMineColors = require("./sample-colors.js")
+const testColors = require("./jonasjacek-colors.js")
+const colorMineColors = require("./colormine-colors.js")
+const luvColors = require("./luv-lchuv-colors.js")
 /**
 * Check if two arrays are approximately the same
 * @param {Array} actual - The array of computed values
@@ -213,7 +214,28 @@ describe("Color",function(){
     })
     describe("#constructor (w/color mine data)",function(){
         colorMineColors.forEach((color, i)=>{
-            let keys = Color.validTypes;
+            // Color Mine data reliably covers the following types
+            let keys = ['rgb', 'hex', 'hsl', 'xyz', 'lab', 'lchab'];
+            context(`Input:"${color.hex} #${i+1}"`,function(){
+                keys.forEach((initKey)=>{
+                    keys.forEach((testKey)=>{
+                        it(`Input mode: ${initKey} - [${color[initKey]}], Output mode: ${testKey}`,function(){
+                            let initColor = new Color({"color":color[initKey],"type":initKey});
+                            if(testKey=="hex"){
+                                assert.strictEqual(initColor[testKey],color[testKey].toLowerCase());
+                            }else{
+                                almost(initColor[testKey],color[testKey],0.5)
+                            }
+                        })
+                    })
+                })
+            })
+        })
+    })
+    describe("#constructor (w/luv-lchuv)",function(){
+        luvColors.forEach((color, i)=>{
+            // Color Mine data reliably covers the following types
+            let keys = ['hex','luv', 'lchuv'];
             context(`Input:"${color.hex} #${i+1}"`,function(){
                 keys.forEach((initKey)=>{
                     keys.forEach((testKey)=>{
@@ -354,6 +376,19 @@ describe("Color",function(){
         })
     })
     describe("#random",function(){
+        context(`Input:abcde`,function(){
+            it("should returns a new Color instance",function(){
+                assert.instanceOf(Color.randomFromString("ABC"),Color);
+            })
+            it("should returns a deterministic color instance",function(){
+                assert.deepEqual(Color.randomFromString("efg"),Color.randomFromString("efg"));
+            })
+            it("should returns a random color",function(){
+                assert.notDeepEqual(Color.randomFromString("abc"),Color.randomFromString("efg"));
+            })
+        })
+    })
+    describe("#randomFromString",function(){
         context(`Input:none`,function(){
             it("should returns a new Color instance",function(){
                 assert.instanceOf(Color.random(),Color);
@@ -530,6 +565,44 @@ describe("Color",function(){
                 green.capitalize = true; 
                 assert.strictEqual(green.labString,"LAB(32.29700, 79.19400, -107.85900)")
             })
+            it("should return a lowercase 5 precision luvString",function(){
+                const green = new Color({"color":"#00FF00","type":"hex"});
+                green.capitalize = false;
+                green.rgb = [255,0,0]
+                assert.strictEqual(green.hexString,"#ff0000")
+                green.lab = [32.297, 79.194, -107.859];
+                green.precision = 5;
+                assert.strictEqual(green.luvString,"lab(32.29700, 79.19400, -107.85900)")
+            })
+            it("should return a uppercase 5 precision luvString",function(){
+                const green = new Color({"color":"#00FF00","type":"hex"});
+                green.capitalize = false;
+                green.rgb = [255,0,0]
+                assert.strictEqual(green.hexString,"#ff0000")
+                green.lab = [32.297, 79.194, -107.859];
+                green.precision = 5;
+                green.capitalize = true; 
+                assert.strictEqual(green.luvString,"LAB(32.29700, 79.19400, -107.85900)")
+            })
+            it("should return a lowercase 5 precision lchuv",function(){
+                const green = new Color({"color":"#00FF00","type":"hex"});
+                green.capitalize = false;
+                green.rgb = [255,0,0]
+                assert.strictEqual(green.hexString,"#ff0000")
+                green.lab = [32.297, 79.194, -107.859];
+                green.precision = 5;
+                assert.strictEqual(green.lchuv,"lab(32.29700, 79.19400, -107.85900)")
+            })
+            it("should return a uppercase 5 precision lchuv",function(){
+                const green = new Color({"color":"#00FF00","type":"hex"});
+                green.capitalize = false;
+                green.rgb = [255,0,0]
+                assert.strictEqual(green.hexString,"#ff0000")
+                green.lab = [32.297, 79.194, -107.859];
+                green.precision = 5;
+                green.capitalize = true; 
+                assert.strictEqual(green.lchuv,"LAB(32.29700, 79.19400, -107.85900)")
+            })
         })
         context("Supply color from random and test cloning",function(){
             const color = Color.random();
@@ -541,6 +614,8 @@ describe("Color",function(){
                 almost(rgb.xyz,color.xyz,0.1,"rgb-xyz");
                 almost(rgb.lab,color.lab,0.1,"rgb-lab");
                 almost(rgb.lchab,color.lchab,0.1,"rgb-lchab");
+                almost(rgb.luv,color.luv,0.1,"rgb-luv");
+                almost(rgb.lchuv,color.lchuv,0.1,"rgb-lchuv");
             })
             it(`HEX input [${color.hex}] - should set approx same color`,function(){
                 const hex = new Color();
@@ -550,6 +625,8 @@ describe("Color",function(){
                 almost(hex.xyz,color.xyz,0.1,"hex-xyz");
                 almost(hex.lab,color.lab,0.1,"hex-lab");
                 almost(hex.lchab,color.lchab,0.1,"hex-lchab");
+                almost(hex.luv,color.luv,0.1,"hex-luv");
+                almost(hex.lchuv,color.lchuv,0.1,"hex-lchuv");
             });
             it(`HSL input [${color.hsl}] - should set approx same color`,function(){
                 const hsl = new Color();
@@ -558,7 +635,9 @@ describe("Color",function(){
                 almost(hsl.hsl,color.hsl,0.1,"hsl-hsl");
                 almost(hsl.xyz,color.xyz,0.1,"hsl-xyz");
                 almost(hsl.lab,color.lab,0.1,"hsl-lab");
-                almost(hsl.lchab,color.lchab,0.1,"hsl-lchab");
+                almost(hsl.lchab,color.lchab,0.1,"hsl-lchab")
+                almost(hsl.luv,color.luv,0.1,"hsl-luv");
+                almost(hsl.lchuv,color.lchuv,0.1,"hsl-lchuv");
             })
             it(`XYZ input [${color.xyz}] - should set approx same color`,function(){
                 const xyz = new Color();
@@ -568,6 +647,8 @@ describe("Color",function(){
                 almost(xyz.xyz,color.xyz,0.1,"xyz-xyz");
                 almost(xyz.lab,color.lab,0.1,"xyz-lab");
                 almost(xyz.lchab,color.lchab,0.1,"xyz-lchab");
+                almost(xyz.luv,color.luv,0.1,"xyz-luv");
+                almost(xyz.lchuv,color.lchuv,0.1,"xyz-lchuv");
             })
             it(`LAB input [${color.lab}] - should set approx same color`,function(){
                 const lab = new Color();
@@ -577,6 +658,8 @@ describe("Color",function(){
                 almost(lab.xyz,color.xyz,0.1,"lab-xyz");
                 almost(lab.lab,color.lab,0.1,"lab-lab");
                 almost(lab.lchab,color.lchab,0.1,"lab-lchab");
+                almost(lab.luv,color.luv,0.1,"lab-luv");
+                almost(lab.lchuv,color.lchuv,0.1,"lab-lchuv");
             })
             it(`LCHAB input [${color.lchab}] - should set approx same color`,function(){
                 const lchab = new Color();
@@ -586,6 +669,30 @@ describe("Color",function(){
                 almost(lchab.xyz,color.xyz,0.1,"lchab-xyz");
                 almost(lchab.lab,color.lab,0.1,"lchab-lab");
                 almost(lchab.lchab,color.lchab,0.1,"lchab-lchab");
+                almost(lchab.luv,color.luv,0.1,"lchab-luv");
+                almost(lchab.lchuv,color.lchuv,0.1,"lchab-lchuv");
+            })
+            it(`LUV input [${color.luv}] - should set approx same color`,function(){
+                const luv = new Color();
+                luv.luv = color.luv;
+                almost(luv.rgb,color.rgb,0.1,"luv-rgb");
+                almost(luv.hsl,color.hsl,0.1,"luv-hsl");
+                almost(luv.xyz,color.xyz,0.1,"luv-xyz");
+                almost(luv.lab,color.lab,0.1,"luv-lab");
+                almost(luv.lchab,color.lchab,0.1,"luv-lchab");
+                almost(luv.luv,color.luv,0.1,"luv-luv");
+                almost(luv.lchuv,color.lchuv,0.1,"luv-lchuv");
+            })
+            it(`lchuv input [${color.lchuv}] - should set approx same color`,function(){
+                const lchuv = new Color();
+                lchuv.lchuv = color.lchuv;
+                almost(lchuv.rgb,color.rgb,0.1,"lchuv-rgb");
+                almost(lchuv.hsl,color.hsl,0.1,"lchuv-hsl");
+                almost(lchuv.xyz,color.xyz,0.1,"lchuv-xyz");
+                almost(lchuv.lab,color.lab,0.1,"lchuv-lab");
+                almost(lchuv.lchab,color.lchab,0.1,"lchuv-lchab");
+                almost(lchuv.luv,color.luv,0.1,"lchuv-luv");
+                almost(lchuv.lchuv,color.lchuv,0.1,"lchuv-lchuv");
             })
         })
     })

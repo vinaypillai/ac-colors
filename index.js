@@ -1,10 +1,15 @@
 /** Class representing a color. */
 class Color {
   /** List of valid color spaces */
-  static validTypes = ['rgb', 'hex', 'hsl', 'xyz', 'lab', 'lchab'];
+  static validTypes = ['rgb', 'hex', 'hsl', 'xyz', 'lab', 'lchab', 'luv',
+    'lchuv'];
 
   /** d65 standard illuminant in XYZ */
   static d65 = [95.05, 100, 108.9];
+
+  /** Round values smaller than maxZeroTolerance to zero in computations which
+  can fluctuate greatly near zero */
+  static maxZeroTolerance = Math.pow(10, -12);
 
   /**
   * Create a color
@@ -70,6 +75,8 @@ class Color {
         this._hex = Color.rgbToHex(this._rgb);
         this._lab = Color.xyzToLab(this._xyz);
         this._lchab = Color.labToLCHab(this._lab);
+        this._luv = Color.xyzToLuv(this._xyz);
+        this._lchuv = Color.luvToLCHuv(this._luv);
         break;
     }
     if (type !== 'xyz') {
@@ -529,11 +536,10 @@ class Color {
   * @return {number[]} The lchab tuple
   */
   static labToLCHab(lab) {
-    const maxZeroTolerance = Math.pow(10,-13);
     const a = lab[1];
     // Since atan2 behaves unpredicably for non-zero values of b near 0,
     // round b within the given tolerance
-    const b = (Math.abs(lab[2])<maxZeroTolerance) ? 0 : lab[2];
+    const b = (Math.abs(lab[2]) < Color.maxZeroTolerance) ? 0 : lab[2];
     const c = Math.sqrt(a * a + b * b);
     const h = Math.atan2(b, a) >= 0 ?
       Math.atan2(b, a) / Math.PI * 180 :
@@ -572,6 +578,10 @@ class Color {
     const Zn = Color.d65[2];
     const vR = 9 * Yn / (Xn + 15 * Yn + 3 * Zn);
     const uR = 4 * Xn / (Xn + 15 * Yn + 3 * Zn);
+    // If XYZ = [0,0,0], avoid division by zero and return conversion
+    if (x === 0 && y === 0 && z === 0) {
+      return [0, 0, 0];
+    }
     const v1 = 9 * y / (x + 15 * y + 3 * z);
     const u1 = 4 * x / (x + 15 * y + 3 * z);
     const yR = y / Yn;
@@ -602,14 +612,17 @@ class Color {
     const v0 = 9 * Yn / (Xn + 15 * Yn + 3 * Zn);
     const u0 = 4 * Xn / (Xn + 15 * Yn + 3 * Zn);
     const y = (L > kap * eps) ? Math.pow((L + 16) / 116, 3) : L / kap;
-    const d = y * (39 * L / (v + 13 * L * v0) - 5);
+    // If L is 0 (black), will evaluate to NaN, use 0
+    const d = y * (39 * L / (v + 13 * L * v0) - 5) || 0;
     const c = -1 / 3;
     const b = -5 * y;
-    const a = (52 * L / (u + 13 * L * u0) - 1) / 3;
+    // If L is 0 (black), will evaluate to NaN, use 0
+    const a = (52 * L / (u + 13 * L * u0) - 1) / 3 || 0;
     const x = (d - b) / (a - c);
     const z = x * a + b;
+    // x,y,z in [0,1] multiply by 100 to scale to [0,100]
     // Add zero to prevent signed zeros (force 0 rather than -0)
-    return [x + 0, y + 0, z + 0];
+    return [x * 100 + 0, y * 100 + 0, z * 100 + 0];
   }
 
   /**
@@ -619,8 +632,10 @@ class Color {
   */
   static luvToLCHuv(luv) {
     const L = luv[0];
-    const u = luv[1];
-    const v = luv[2];
+    const u = (Math.abs(luv[1]) < Color.maxZeroTolerance) ? 0 : luv[1];
+    // Since atan2 behaves unpredicably for non-zero values of v near 0,
+    // round v within the given tolerance
+    const v = (Math.abs(luv[2]) < Color.maxZeroTolerance) ? 0 : luv[2];
     const c = Math.sqrt(u * u + v * v);
     // Math.atan2 returns angle in radians so convert to degrees
     let h = Math.atan2(v, u) * 180 / Math.PI;
@@ -628,6 +643,21 @@ class Color {
     h = (h >= 0) ? h : h + 360;
     // Add zero to prevent signed zeros (force 0 rather than -0)
     return [L + 0, c + 0, h + 0];
+  }
+
+  /**
+  * Convert a 3 element luv lchuv to a 3 element luv tuple.
+  * @param {number[]} lchUV - The lchuv tuple
+  * @return {number[]} The luv tuple
+  */
+  static lchUVToLuv(lchUV) {
+    const L = lchUV[0];
+    const c = lchUV[1];
+    // Convert hue to radians for use with Math.cos and Math.sin
+    const h = lchUV[2] / 180 * Math.PI;
+    const u = c * Math.cos(h);
+    const v = c * Math.sin(h);
+    return [L + 0, u + 0, v + 0];
   }
 
   /**
@@ -674,6 +704,36 @@ class Color {
   static random() {
     return new Color({
       color: [255, 255, 255].map((n) => Math.round(n * Math.random())),
+    });
+  }
+
+  /**
+  * Returns a deterministic random new Color instance for a given string
+  * @param {string} [str=''] - The string to hash for the random color
+  * @return {Color} The new Color instance
+  */
+  static randomFromString(str = '') {
+    // PJW-32 hash string to get numeric value
+    const pjw = (str) => {
+      let h = 0xffffffff;
+      for (let i = 0; i < str.length; i++) {
+        h = (h << 4) + str.charCodeAt(i);
+        const g = h & 0xf0000000;
+        if (g !== 0) {
+          h ^= (g >>> 24);
+          h ^= g;
+        }
+      }
+      return Math.abs(h);
+    };
+    // Generate 3 hashes for r,g,b values
+    // Each hash gets appended previous hash as pseudo salt
+    const h1 = pjw(str);
+    const h2 = pjw(str + h1);
+    const h3 = pjw(str + h2);
+    // Mod 256 to generate values in [0,255]
+    return new Color({
+      color: [h1 % 256, h2 % 256, h3 % 256],
     });
   }
 
@@ -733,14 +793,14 @@ class Color {
     if (!Color.validTypes.includes(type)) {
       throw new TypeError(`Parameter 2 '${type}' is not a valid type.`);
     }
-    const contrastWhite = Color.contrastRatio(new Color({
-      color: [255, 255, 255],
-    }),
-    new Color({color, type}));
-    const contrastBlack = Color.contrastRatio(new Color({
-      color: [0, 0, 0],
-    }),
-    new Color({color, type}));
+    const contrastWhite = Color.contrastRatio(
+        new Color({color: [255, 255, 255]}),
+        new Color({color, type}),
+    );
+    const contrastBlack = Color.contrastRatio(
+        new Color({color: [0, 0, 0]}),
+        new Color({color, type}),
+    );
     if (contrastWhite > contrastBlack) {
       return '#FFFFFF';
     } else {

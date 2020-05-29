@@ -29,6 +29,10 @@ ac-colors is a reactive JavaScript color library that can freely convert between
         * [labString](#labString)
         * [lchab](#lchab)
         * [lchabString](#lchabString)
+        * [luv](#luv)
+        * [luvString](#luvString)
+        * [lchuv](#lchuv)
+        * [lchuvString](#lchuvString)
         * [precision](#precision-1)
         * [capitalize](#capitalize-1)
     * [Static methods](#static-methods)
@@ -42,6 +46,10 @@ ac-colors is a reactive JavaScript color library that can freely convert between
         * [Color.labToXyz](#colorlabtoxyz)
         * [Color.labToLCHab](#colorlabtolchab)
         * [Color.lchABToLab](#colorlchabtolab)
+        * [Color.xyzToLuv](#colorxyztoluv)
+        * [Color.luvToXyz](#colorluvtoxyz)
+        * [Color.luvToLCHuv](#colorluvtolchuv)
+        * [Color.lchUVToLuv](#colorlchuvtoluv)
         * [Color.luminance](#colorluminance)
         * [Color.random](#colorrandom)
         * [Color.randomOfType](#colorrandomoftype)
@@ -249,6 +257,38 @@ console.log(white.lchabString) // LCHab(100.000, 0.000,0.000)
 white.capitalize = false;
 console.log(white.lchabString) // lchAB(100.000, 0.000,0.000)
 ```
+#### `luv` 
+The `luv` property is a reactive getter and setter for the three element array representing the colors [l,u,v] values.
+```javascript
+let black = new Color();
+console.log(black.luv); // [0,0,0]
+black.luv = [24.272,7.853,-17.538];
+console.log(black.rgbString); // RGB(55, 55, 84)
+```
+#### `luvString` 
+The `luvString` property is a formatted string output for the lab color. It is  impacted by the Color object's `precision` and `capitalize` values.
+```javascript
+let white = new Color({"color":[255,255,255]});
+console.log(white.luvString) // LUV(100.000, 0.000, 0.000)
+white.capitalize = false;
+console.log(white.luvString) // luv(100.000, 0.000, 0.000)
+```
+#### `lchuv` 
+The `lchuv` property is a reactive getter and setter for the three element array representing the colors [l,c,h] values.
+```javascript
+let black = new Color();
+console.log(black.lchuv); // [0,0,0]
+black.lchab = [24.272,7.853,294.121];
+console.log(black.rgbString); // RGB(55, 55, 84)
+```
+#### `lchuvString` 
+The `lchuvString` property is a formatted string output for the lab color. It is  impacted by the Color object's `precision` and `capitalize` values. However, the capitalization is inverted for the subscripted 'uv'.
+```javascript
+let white = new Color({"color":[255,255,255]});
+console.log(white.lchuvString) // LCHuv(100.000, 0.000,0.000)
+white.capitalize = false;
+console.log(white.lchuvString) // lchUV(100.000, 0.000,0.000)
+```
 #### `precision` 
 The `precision` property is a reactive formatting property that controls the number of decimal places outputted from a formatted string property. It is set during object initialization, but can be updated at any time.
 ```javascript
@@ -329,6 +369,30 @@ This method takes in a three element array `[l,c,h]` representing a color's LCHa
 // Color.lchABToLab(lchAB)
 console.log(Color.lchABToLab([24.294,19.571,0.617])); // [24.294, 19.56986524034229, 0.21074979203493507]
 ```
+#### `Color.xyzToLuv`
+This method takes in a three element array `[x,y,z]` representing the color's xyz values and returns a three element array `[l,u,v]` representing a color's luv values.
+```javascript
+// Color.xyzToLuv(xyz)
+console.log(Color.xyzToLuv([5.487,4.191,4.522])); // [24.293087120125165, 19.563162207233198, 0.21375272337743612]
+```
+#### `Color.luvToXyz`
+This method takes in a three element array `[l,u,v]` representing a color's luv values. and returns a three element array `[x,y,z]` representing the color's xyz values.
+```javascript
+// Color.luvToXyz(luv)
+console.log(Color.luvToXyz([24.294,19.570,0.211])); // [5.487917707204406, 4.191284860245909, 4.522847553083241]
+```
+#### `Color.luvToLCHuv`
+This method takes in a three element array `[l,u,v]` representing a color's lab values. and returns a three element array `[l,c,h]` representing the color's LCHuv values.
+```javascript
+// Color.luvToLCHuv(luv)
+console.log(Color.luvToLCHuv([24.294,19.570,0.211])); // [24.294, 19.57113744778264, 0.617728209288702]
+```
+#### `Color.lchUVToLuv`
+This method takes in a three element array `[l,c,h]` representing a color's LCHuv values. and returns a three element array `[l,u,v]` representing the color's luv values.
+```javascript
+// Color.lchUVToLuv(lchUV)
+console.log(Color.lchUVToLuv([24.294,19.571,0.617])); // [24.294, 19.56986524034229, 0.21074979203493507]
+```
 #### `Color.luminance`
 This method takes in a three element array and a string representing its type and returns its [relative luminance](https://www.w3.org/TR/WCAG20/#relativeluminancedef). Default type is `"rgb"`.
 ```javascript
@@ -376,7 +440,7 @@ console.log(Color.contrastRatio(red,blue)); // 3.9984767707539985
 
 ```
 ## Acknowledgements
-Thanks to Jonas Jacek for providing some of the  [sample data](https://jonasjacek.github.io/colors/) used for testing the color conversion. Additional resources for implementing color space transformations, including the ones used in this library, are listed below:
+Thanks to [Jonas Jacek](https://jonasjacek.github.io/colors/) and [ColorMine.org](http://colormine.org/colors-by-name) for providing some of the  sample data used for testing the color conversion. Additional resources for implementing color space transformations, including the ones used in this library, are listed below:
 * [http://www.color.org/iccmax/profiles/sRGB_D65_colorimetric.icc](http://www.color.org/iccmax/profiles/sRGB_D65_colorimetric.icc)
 * [https://graphics.stanford.edu/courses/cs148-10-summer/docs/2010--kerr--cie_xyz.pdf](https://graphics.stanford.edu/courses/cs148-10-summer/docs/2010--kerr--cie_xyz.pdf)
 * [http://www.color.org/sRGB.pdf](http://www.color.org/sRGB.pdf)

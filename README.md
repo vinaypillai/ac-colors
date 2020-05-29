@@ -4,7 +4,7 @@
 
 ![package release version badge](https://img.shields.io/github/v/release/vinaypillai/ac-colors) ![minified size badge](https://img.shields.io/bundlephobia/min/ac-colors) ![travis ci status badge](https://img.shields.io/travis/com/vinaypillai/ac-colors) ![Coveralls coverage badge](https://coveralls.io/repos/github/vinaypillai/ac-colors/badge.svg?branch=master) ![dependency status badge](https://img.shields.io/librariesio/release/npm/ac-colors) ![mit license badge](https://img.shields.io/npm/l/ac-colors)
 
-ac-colors is a reactive JavaScript color library that can freely convert between sRGB, HSL, HEX, XYZ, LAB, and LCHab, as well as handle random color generation and contrast ratio calculation. A live color picker running on ac-colors can be found at [http://colors.acutecomponents.com/](http://colors.acutecomponents.com/).
+ac-colors is a reactive JavaScript color library that can freely convert between sRGB, HSL, HEX, XYZ, LAB, LCHab, LUV, and LCHuv, as well as handle random color generation and contrast ratio calculation. A live color picker running on ac-colors can be found at [http://colors.acutecomponents.com/](http://colors.acutecomponents.com/).
 
 * [Installation](#Installation)
     * [Node.js](#nodejs)
@@ -52,6 +52,7 @@ ac-colors is a reactive JavaScript color library that can freely convert between
         * [Color.lchUVToLuv](#colorlchuvtoluv)
         * [Color.luminance](#colorluminance)
         * [Color.random](#colorrandom)
+        * [Color.randomFromString](#colorrandomfromstring)
         * [Color.randomOfType](#colorrandomoftype)
         * [Color.randomOfTypeFormatted](#colorrandomoftypeformatted)
         * [Color.contrastTextColor](#colorcontrasttextcolor)
@@ -77,7 +78,7 @@ Alternatively add this `<script>` tag to your body to load the minified version 
 ```
 ## Making a Color object
 The easiest way to get started with color conversion in ac-colors is by creating a Color object. The constructor takes  an object with up to four deconstructed properties which help determine how to convert and format color output:
-* `color`: An array (or string if `type` is hex) containing the three numbers for the color (ex.[r,g,b]). Defaults to `[0,0,0]`.
+* `color`: An array (or string if `type` is hex) containing the three numbers for the color (ex. [r,g,b]). Defaults to `[0,0,0]`.
 * `type`: The format for the color being inputted. A full list of types can be found [below](#type). Defaults to `"rgb"`.
 * `precision`: The number of decimals to be outputted from the string output methods. Defaults to `3`.
 * `capitalize`: A boolean flag for whether or not to capitalize the string output. Defaults to `true`.
@@ -89,7 +90,7 @@ let black = new Color();
 console.log(black.hex); // #000000
 ```
 ### `color`
-The `color` property is usually a three element array containing the three RGB, HSL, LAB, XYZ, or LCHab digits, but can also be a string containing a 3 or 6 digit hexcode. The default color, `[0,0,0,]` evaluates to black when used with the default type of `"rgb"`.
+The `color` property is usually a three element array containing the three RGB, HSL, LAB, XYZ, LUV, LCHuv, or LCHab digits, but can also be a string containing a 3 or 6 digit hexcode. The default color, `[0,0,0,]` evaluates to black when used with the default type of `"rgb"`.
 ```javascript
 let red = new Color({"color":[255,0,0]});
 console.log(red.rgbString); // RGB(255, 0, 0)
@@ -107,6 +108,8 @@ The `type` property is a string with the following possible values:
 * `"xyz"`
 * `"lab"`
 * `"lchab"`
+* `"luv"`
+* `"lchuv"`
 
 The type merely specifies the format of the incoming color. Once the type is specified, all of the below [properties](#color-object-properties) will be set.
 ```javascript
@@ -134,7 +137,7 @@ console.log(yellowCaps.hexString); // #F1D704
 console.log(yellowNoCaps.hexString); // #f1d704
 ```
 ### Color object reactivity
-Each Color objects six [reactive color members](#object-properties),  and two reactive formatting members, `precision` and `capitalize`. This means that setting the value of any of the properties will automatically trigger updates of all the other values, so conversion between all the possible types is done simultaneously.
+Each Color object has six [reactive color members](#object-properties) and two reactive formatting members, `precision` and `capitalize`. This means that setting the value of any of the properties will automatically trigger updates of all the other values, so conversion between all the possible types is done simultaneously.
 ```javascript
 const green = new Color({"color":"#00FF00","type":"hex"});
 console.log(green.rgbString); // RGB(0, 255, 0)
@@ -150,7 +153,7 @@ console.log(green.lchabString); // lchAB(32.29701, 133.81132, 306.28752)
 ## Color class API
 The color object contains two main sets of data members which can be used for color conversion. There are the reactive properties which can be accessed from each Color instance, but there are also static methods which can be used for general color conversion without creating a Color object.
 ### Object properties 
-There are 12 primary instance properties, as well as two formatting properties (`precision` and `capitalize`) in each Color object that can be used for color conversion. The 12 main conversion properties can be divided into two categories: Reactive members and their complementary formatted string outputs.
+There are 14 primary instance properties, as well as two formatting properties (`precision` and `capitalize`) in each Color object that can be used for color conversion. The 14 main conversion properties can be divided into two categories: Reactive members and their complementary formatted string outputs.
 | Reactive members | Formatted string outputs |
 |:--:|:--:|
 | rgb | rgbString |
@@ -159,6 +162,8 @@ There are 12 primary instance properties, as well as two formatting properties (
 | xyz | xyzString |
 | lab | labString |
 | lchab | lchabString |
+| luv | luvString |
+| lchuv | lchuvString |
 
 #### `rgb` 
 The `rgb` property is a reactive getter and setter for the three element array representing the colors [r,g,b] values.
@@ -263,7 +268,7 @@ The `luv` property is a reactive getter and setter for the three element array r
 let black = new Color();
 console.log(black.luv); // [0,0,0]
 black.luv = [24.272,7.853,-17.538];
-console.log(black.rgbString); // RGB(55, 55, 84)
+console.log(black.rgbString); // RGB(70, 51, 78)
 ```
 #### `luvString` 
 The `luvString` property is a formatted string output for the lab color. It is  impacted by the Color object's `precision` and `capitalize` values.
@@ -278,8 +283,8 @@ The `lchuv` property is a reactive getter and setter for the three element array
 ```javascript
 let black = new Color();
 console.log(black.lchuv); // [0,0,0]
-black.lchab = [24.272,7.853,294.121];
-console.log(black.rgbString); // RGB(55, 55, 84)
+black.lchuv = [24.272,7.853,294.121];
+console.log(black.rgbString); // RGB(63, 55, 66)
 ```
 #### `lchuvString` 
 The `lchuvString` property is a formatted string output for the lab color. It is  impacted by the Color object's `precision` and `capitalize` values. However, the capitalization is inverted for the subscripted 'uv'.
@@ -373,25 +378,25 @@ console.log(Color.lchABToLab([24.294,19.571,0.617])); // [24.294, 19.56986524034
 This method takes in a three element array `[x,y,z]` representing the color's xyz values and returns a three element array `[l,u,v]` representing a color's luv values.
 ```javascript
 // Color.xyzToLuv(xyz)
-console.log(Color.xyzToLuv([5.487,4.191,4.522])); // [24.293087120125165, 19.563162207233198, 0.21375272337743612]
+console.log(Color.xyzToLuv([5.487,4.191,4.522])); // [24.293087120125165, 22.133854138128648, -2.4869700034790783]
 ```
 #### `Color.luvToXyz`
 This method takes in a three element array `[l,u,v]` representing a color's luv values. and returns a three element array `[x,y,z]` representing the color's xyz values.
 ```javascript
 // Color.luvToXyz(luv)
-console.log(Color.luvToXyz([24.294,19.570,0.211])); // [5.487917707204406, 4.191284860245909, 4.522847553083241]
+console.log(Color.luvToXyz([24.294,22.134,-2.487])); //  [5.487326075294226, 4.191284860245909, 4.522311066039963]
 ```
 #### `Color.luvToLCHuv`
 This method takes in a three element array `[l,u,v]` representing a color's lab values. and returns a three element array `[l,c,h]` representing the color's LCHuv values.
 ```javascript
 // Color.luvToLCHuv(luv)
-console.log(Color.luvToLCHuv([24.294,19.570,0.211])); // [24.294, 19.57113744778264, 0.617728209288702]
+console.log(Color.luvToLCHuv([24.294,22.134,-2.487])); // [24.294, 22.27328276208965, 353.5890738118895]
 ```
 #### `Color.lchUVToLuv`
 This method takes in a three element array `[l,c,h]` representing a color's LCHuv values. and returns a three element array `[l,u,v]` representing the color's luv values.
 ```javascript
 // Color.lchUVToLuv(lchUV)
-console.log(Color.lchUVToLuv([24.294,19.571,0.617])); // [24.294, 19.56986524034229, 0.21074979203493507]
+console.log(Color.lchUVToLuv([24.294,22.273,353.589])); // [24.294, 22.133715802240754, -2.48699694122008]
 ```
 #### `Color.luminance`
 This method takes in a three element array and a string representing its type and returns its [relative luminance](https://www.w3.org/TR/WCAG20/#relativeluminancedef). Default type is `"rgb"`.
@@ -406,6 +411,14 @@ This method returns a new Color instance with a random color selected.
 // Color.random()
 console.log(Color.random()); // Color {_rgb: Array(3), _hsl: Array(3), _hex: "#b3eeb6", _xyz: Array(3), _lab: Array(3), …}
 console.log(Color.random()); // Color {_rgb: Array(3), _hsl: Array(3), _hex: "#85dd60", _xyz: Array(3), _lab: Array(3), …}
+```
+#### `Color.randomFromString`
+This method returns a new Color instance with a deterministic random color derived from the given string. The string is hashed under the PJW-32 hash to achieve pseudorandom distribution of colors.
+```javascript
+// Color.randomFromString(str)
+console.log(Color.randomFromString("Hello World!")); // Color {_xyz: Array(3), _rgb: Array(3), _hsl: Array(3), _hex: "#712199", _lab: Array(3), …}
+console.log(Color.randomFromString("Hello World!")); // Color {_xyz: Array(3), _rgb: Array(3), _hsl: Array(3), _hex: "#712199", _lab: Array(3), …}
+console.log(Color.randomFromString("Foo Bar")); // Color {_xyz: Array(3), _rgb: Array(3), _hsl: Array(3), _hex: "#b20092", _lab: Array(3), …}
 ```
 #### `Color.randomOfType`
 This method takes in a type and returns a new three element array of the type selected, or six digit hex code if type is `"hex"`. Default type is `"rgb"`.
@@ -440,7 +453,7 @@ console.log(Color.contrastRatio(red,blue)); // 3.9984767707539985
 
 ```
 ## Acknowledgements
-Thanks to [Jonas Jacek](https://jonasjacek.github.io/colors/) and [ColorMine.org](http://colormine.org/colors-by-name) for providing some of the  sample data used for testing the color conversion. Additional resources for implementing color space transformations, including the ones used in this library, are listed below:
+Thanks to [Jonas Jacek](https://jonasjacek.github.io/colors/), [ColorMine.org](http://colormine.org/colors-by-name), and [EasyRGB](https://www.easyrgb.com/en/convert.php#inputFORM) for providing some of the  sample data used for testing the color conversion. Additional resources for implementing color space transformations, including the ones used in this library, are listed below:
 * [http://www.color.org/iccmax/profiles/sRGB_D65_colorimetric.icc](http://www.color.org/iccmax/profiles/sRGB_D65_colorimetric.icc)
 * [https://graphics.stanford.edu/courses/cs148-10-summer/docs/2010--kerr--cie_xyz.pdf](https://graphics.stanford.edu/courses/cs148-10-summer/docs/2010--kerr--cie_xyz.pdf)
 * [http://www.color.org/sRGB.pdf](http://www.color.org/sRGB.pdf)
@@ -450,6 +463,8 @@ Thanks to [Jonas Jacek](https://jonasjacek.github.io/colors/) and [ColorMine.org
 * [http://docs-hoffmann.de/cielab03022003.pdf](http://docs-hoffmann.de/cielab03022003.pdf)
 * [http://faculty.washington.edu/jokelly/gammaFaq1.htm](http://faculty.washington.edu/jokelly/gammaFaq1.htm)
 * [http://www.brucelindbloom.com/index.html](http://www.brucelindbloom.com/index.html)
+* [http://cs.haifa.ac.il/hagit/courses/ist/Lectures/Demos/ColorApplet/me/infoluv.html](http://cs.haifa.ac.il/hagit/courses/ist/Lectures/Demos/ColorApplet/me/infoluv.html)
+* [https://engineering.purdue.edu/~bouman/ece637/notes/pdf/ColorSpaces.pdf](https://engineering.purdue.edu/~bouman/ece637/notes/pdf/ColorSpaces.pdf)
 ## License
 Copyright 2020 Vinay Pillai
 

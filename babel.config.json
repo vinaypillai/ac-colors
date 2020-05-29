@@ -7,7 +7,8 @@
         "not ie_mob 11",
         "> 0.25%",
         "not dead"
-      ]
+      ],
+      "loose":true
     }]
   ],
   "plugins": [

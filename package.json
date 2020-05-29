@@ -12,7 +12,7 @@
     "lint": "eslint --fix --ignore-path .eslintignore .",
     "browserify": "npx browserify index.js --standalone Color --outfile dist/ac-colors.js",
     "transpile": "npx babel index.js --out-file index.min.js && npx babel dist/ac-colors.js --out-file dist/ac-colors.min.js",
-    "minify": "npx uglifyjs --compress --mangle --output index.min.js -- index.min.js && npx uglifyjs --compress --mangle --output dist/ac-colors.min.js -- dist/ac-colors.min.js",
+    "minify": "npx uglifyjs --compress --mangle --keep-fnames --output index.min.js -- index.min.js && npx uglifyjs --compress --mangle --keep-fnames --output dist/ac-colors.min.js -- dist/ac-colors.min.js",
     "build": "npm run lint && npm run browserify && npm run transpile && npm run minify"
   },
   "repository": {

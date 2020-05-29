@@ -572,7 +572,7 @@ describe("Color",function(){
                 assert.strictEqual(green.hexString,"#ff0000")
                 green.lab = [32.297, 79.194, -107.859];
                 green.precision = 5;
-                assert.strictEqual(green.luvString,"lab(32.29700, 79.19400, -107.85900)")
+                assert.strictEqual(green.luvString,"luv(32.29700, -9.40574, -130.34342)")
             })
             it("should return a uppercase 5 precision luvString",function(){
                 const green = new Color({"color":"#00FF00","type":"hex"});
@@ -582,7 +582,7 @@ describe("Color",function(){
                 green.lab = [32.297, 79.194, -107.859];
                 green.precision = 5;
                 green.capitalize = true; 
-                assert.strictEqual(green.luvString,"LAB(32.29700, 79.19400, -107.85900)")
+                assert.strictEqual(green.luvString,"LUV(32.29700, -9.40574, -130.34342)")
             })
             it("should return a lowercase 5 precision lchuv",function(){
                 const green = new Color({"color":"#00FF00","type":"hex"});
@@ -591,7 +591,7 @@ describe("Color",function(){
                 assert.strictEqual(green.hexString,"#ff0000")
                 green.lab = [32.297, 79.194, -107.859];
                 green.precision = 5;
-                assert.strictEqual(green.lchuv,"lab(32.29700, 79.19400, -107.85900)")
+                assert.strictEqual(green.lchuvString,"lchUV(32.29700, 130.68234, 265.87262)")
             })
             it("should return a uppercase 5 precision lchuv",function(){
                 const green = new Color({"color":"#00FF00","type":"hex"});
@@ -601,7 +601,7 @@ describe("Color",function(){
                 green.lab = [32.297, 79.194, -107.859];
                 green.precision = 5;
                 green.capitalize = true; 
-                assert.strictEqual(green.lchuv,"LAB(32.29700, 79.19400, -107.85900)")
+                assert.strictEqual(green.lchuvString,"LCHuv(32.29700, 130.68234, 265.87262)")
             })
         })
         context("Supply color from random and test cloning",function(){

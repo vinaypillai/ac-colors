@@ -289,7 +289,7 @@ class Color {
     const truncLCHUV = this.lchuv.map((x) => x.toFixed(this.precision));
     return (this.capitalize) ?
       'LCHuv(' + truncLCHUV.join(', ') + ')' :
-      'lchuv(' + truncLCHUV.join(', ') + ')';
+      'lchUV(' + truncLCHUV.join(', ') + ')';
   }
 
   /**

@@ -829,6 +829,42 @@ class Color {
       luminance2 / luminance1 :
       luminance1 / luminance2;
   }
+
+  /**
+  * Computes a weighted average of two colors for a given colorspace
+  * @param {Color} color1 - The first color
+  * @param {Color} color2 - The second color
+  * @param {string} [type='rgb'] - The colorspace to blend the colors in
+  * @param {number} [weight=0.5] - The weight given to the first color in blend
+  * @return {number} The contrast ratio between the given colors
+  * @throws Will throw an error if either parameter is not a color instance
+  */
+  static blend(color1, color2, type = 'rgb', weight = 0.5) {
+    if (!(color1 instanceof Color)) {
+      throw new TypeError('Parameter 1 must be of type Color.');
+    }
+    if (!(color2 instanceof Color)) {
+      throw new TypeError('Parameter 2 must be of type Color.');
+    }
+    if (typeof type !== 'string') {
+      throw new TypeError('Parameter 3 must be of type string.');
+    }
+    type = type.toLowerCase();
+    if (!Color.validTypes.includes(type)) {
+      throw new TypeError(`Parameter 3 '${type}' is not a valid type.`);
+    }
+    // Blend hex colors as rgb
+    type = (type === 'hex') ? 'rgb' : type;
+    const triplet1 = color1[type];
+    const triplet2 = color2[type];
+    const blend = (new Array(3)).fill().map((val, i) => {
+      return triplet1[i] * weight + triplet2[i] * (1 - weight);
+    });
+    return new Color({
+      'color': blend,
+      'type': type,
+    });
+  }
 }
 module.exports = Color;
 

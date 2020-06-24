@@ -471,21 +471,60 @@ describe("Color",function(){
         })
     })
     describe("#contrastRatio",function(){
-        context(`Input:red and blue color objects`,function(){
+        context(`Input:red and white color objects`,function(){
             it("should returns #FFFFFF",function(){
                 const red = new Color({"color":"#ff0000","type":"hex"});
-                const blue = new Color({"color":[255,255,255]})
-                assert.approximately(Color.contrastRatio(red,blue),3.9984767707539985,0.001);
+                const white = new Color({"color":[255,255,255]})
+                assert.approximately(Color.contrastRatio(red,white),3.9984767707539985,0.001);
             })
             it("should returns throw an error for color 1",function(){
                 const red = new Color({"color":"#ff0000","type":"hex"});
-                const blue = new Color({"color":[255,255,255]})
-                assert.throws(()=>{Color.contrastRatio(null,blue)},TypeError,"Parameter 1 must be of type Color");
+                const white = new Color({"color":[255,255,255]})
+                assert.throws(()=>{Color.contrastRatio(null,white)},TypeError,"Parameter 1 must be of type Color");
             })
             it("should returns throw an error for color 2",function(){
                 const red = new Color({"color":"#ff0000","type":"hex"});
-                const blue = new Color({"color":[255,255,255]})
+                const white = new Color({"color":[255,255,255]})
                 assert.throws(()=>{Color.contrastRatio(red,null)},TypeError,"Parameter 2 must be of type Color");
+            })
+        })
+    })
+    describe("#blend",function(){
+        context(`Input:red and white color objects`,function(){
+            it("should returns RGB(255, 128, 128)",function(){
+                const red = new Color({"color":"#ff0000","type":"hex"});
+                const white = new Color({"color":[255,255,255]})
+                assert.strictEqual(Color.blend(red,white).rgbString,"RGB(255, 128, 128)");
+            })
+            it("should returns #FF8080",function(){
+                const red = new Color({"color":"#ff0000","type":"hex"});
+                const white = new Color({"color":[255,255,255]})
+                assert.strictEqual(Color.blend(red,white,'hex').hexString,"#FF8080");
+            })
+            it("should returns HSL(0, 50, 50)",function(){
+                const red = new Color({"color":"#ff0000","type":"hex"});
+                const white = new Color({"color":[255,255,255]})
+                assert.strictEqual(Color.blend(red,white,'hsl').hslString,"HSL(0.000, 50.000, 74.902)");
+            })
+            it("should throw an error for color 1",function(){
+                const red = new Color({"color":"#ff0000","type":"hex"});
+                const white = new Color({"color":[255,255,255]})
+                assert.throws(()=>{Color.blend(null,white)},TypeError,"Parameter 1 must be of type Color.");
+            })
+            it("should throw an error for color 2",function(){
+                const red = new Color({"color":"#ff0000","type":"hex"});
+                const white = new Color({"color":[255,255,255]})
+                assert.throws(()=>{Color.blend(red,null)},TypeError,"Parameter 2 must be of type Color.");
+            })
+            it("should throw an error for type",function(){
+                const red = new Color({"color":"#ff0000","type":"hex"});
+                const white = new Color({"color":[255,255,255]})
+                assert.throws(()=>{Color.blend(red,white,null)},TypeError,"Parameter 3 must be of type string.");
+            })
+            it("should throw an error for type",function(){
+                const red = new Color({"color":"#ff0000","type":"hex"});
+                const white = new Color({"color":[255,255,255]})
+                assert.throws(()=>{Color.blend(red,white,'asd')},TypeError,"Parameter 3 'asd' is not a valid type.");
             })
         })
     })

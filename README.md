@@ -57,6 +57,7 @@ ac-colors is a reactive JavaScript color library that can freely convert between
         * [Color.randomOfTypeFormatted](#colorrandomoftypeformatted)
         * [Color.contrastTextColor](#colorcontrasttextcolor)
         * [Color.contrastRatio](#colorcontrastratio)
+        * [Color.blend](#colorblend)
 * [Acknowledgements](#acknowledgements)
 * [License](#license)
 
@@ -448,9 +449,18 @@ This method takes in two Color instances and returns the [contrast ratio](https:
 ```javascript
 // Color.contrastRatio(color1,color2)
 const red = new Color({"color":"#ff0000","type":"hex"});
-const blue = new Color({"color":[255,255,255]})
-console.log(Color.contrastRatio(red,blue)); // 3.9984767707539985
-
+const white = new Color({"color":[255,255,255]})
+console.log(Color.contrastRatio(red,white)); // 3.9984767707539985
+```
+#### `Color.blend`
+This method takes in two Color instances and return their weighted average within a given colorspace. Default type is `"rgb"`. Default weight is `0.5`.
+```javascript
+// Color.blend(color1, color2, type, weight)
+const red = new Color({"color":"#ff0000","type":"hex"});
+const white = new Color({"color":[255,255,255]})
+console.log(Color.blend(red,white)); // Color {_xyz: Array(3), _rgb: Array(3), _hsl: Array(3), _hex: "#ff8080", _lab: Array(3), …}
+console.log(Color.blend(red,white,'hsl')); // Color {_xyz: Array(3), _rgb: Array(3), _hsl: Array(3), _hex: "#df9f9f", _lab: Array(3), …}
+console.log(Color.blend(red,white,'hex',0.75)); // Color {_xyz: Array(3), _rgb: Array(3), _hsl: Array(3), _hex: "#ff4040", _lab: Array(3), …}
 ```
 ## Acknowledgements
 Thanks to [Jonas Jacek](https://jonasjacek.github.io/colors/), [ColorMine.org](http://colormine.org/colors-by-name), and [EasyRGB](https://www.easyrgb.com/en/convert.php#inputFORM) for providing some of the  sample data used for testing the color conversion. Additional resources for implementing color space transformations, including the ones used in this library, are listed below:

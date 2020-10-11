@@ -679,6 +679,8 @@ class Color {
     if (type !== 'rgb') {
       color = (new Color({color, type})).rgb;
     }
+    // Remove reference to previous array when calculating contrast ratio
+    color = [...color];
     // Converts color to luminance as denoted by y from the rgb to xyz
     // conversions above
     for (let i = 0; i < color.length; i++) {

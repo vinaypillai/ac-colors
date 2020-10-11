@@ -366,6 +366,18 @@ describe("Color",function(){
                 assert.strictEqual(Color.luminance("#ff0000","hex"),0.2126);
             })
         })
+        context(`Input:"${[0,255,0]}`,function(){
+            it("color should not be modified by luminance calculation",function(){
+                const rgb = [0,255,0];
+                Color.luminance(rgb);
+                assert.deepEqual(rgb,[0,255,0]);
+            })
+        })
+        context(`Input:"#ff0000","hex"`,function(){
+            it("should returns a decimal luminance",function(){
+                assert.strictEqual(Color.luminance("#ff0000","hex"),0.2126);
+            })
+        })
         context(`throw error for type"`,function(){
             it("should returns #000000",function(){
                 assert.throws(()=>{Color.luminance([0,0,0],null)},TypeError,"Parameter 2 must be of type string");

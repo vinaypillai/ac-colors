@@ -396,7 +396,7 @@ class Color {
     // Use built-in toString to convert to hexadecimal
     // Prepend single digit conversion with '0'
     const hexChar = function hexChar(c) {
-      const hex = c.toString(16);
+      const hex = Math.min(255,c).toString(16);
       return hex.length === 1 ? '0' + hex : hex;
     };
     return '#' + hexChar(r) + hexChar(g) + hexChar(b);
